@@ -1,0 +1,106 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ===== Scrollbar ===== */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.2); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(255,255,255,0.4); }
+
+/* ===== Overlay: ẩn scrollbar, nền trong suốt khi cần ===== */
+.overlay-transparent { background: transparent !important; }
+.overlay-chroma { background: #00ff00 !important; }
+.overlay-dark { background: #090d14 !important; }
+
+/* ===== Glassmorphism ===== */
+.glass {
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+/* ===== Broadcast Esports HUD Shadows (đa lớp mềm, không LED dày) ===== */
+.hud-panel {
+  background: rgba(11, 16, 25, 0.9);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.hud-neon-red {
+  border: 1px solid rgba(255, 64, 87, 0.78);
+  box-shadow:
+    0 0 0 1px rgba(255, 64, 87, 0.16),
+    0 0 18px rgba(255, 64, 87, 0.22),
+    0 0 42px rgba(255, 64, 87, 0.09),
+    inset 0 0 18px rgba(255, 64, 87, 0.08);
+}
+
+.hud-neon-gold {
+  border: 1px solid rgba(255, 184, 0, 0.9);
+  box-shadow:
+    0 0 0 1px rgba(255, 184, 0, 0.22),
+    0 0 16px rgba(255, 184, 0, 0.3),
+    0 0 38px rgba(255, 184, 0, 0.14),
+    inset 0 0 16px rgba(255, 184, 0, 0.1);
+}
+
+.hud-team-blue {
+  border: 1px solid rgba(49, 133, 255, 0.55);
+  box-shadow:
+    inset 3px 0 0 #3185FF,
+    -6px 0 22px rgba(49, 133, 255, 0.28),
+    0 0 24px rgba(49, 133, 255, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+.hud-team-red {
+  border: 1px solid rgba(255, 52, 63, 0.55);
+  box-shadow:
+    inset -3px 0 0 #FF343F,
+    6px 0 22px rgba(255, 52, 63, 0.28),
+    0 0 24px rgba(255, 52, 63, 0.1),
+    0 8px 24px rgba(0, 0, 0, 0.45);
+}
+
+@keyframes hudGoldPulse {
+  0%, 100% {
+    box-shadow:
+      0 0 0 1px rgba(255, 184, 0, 0.22),
+      0 0 14px rgba(255, 184, 0, 0.26),
+      0 0 32px rgba(255, 184, 0, 0.12),
+      inset 0 0 14px rgba(255, 184, 0, 0.08);
+  }
+  50% {
+    box-shadow:
+      0 0 0 1px rgba(255, 184, 0, 0.42),
+      0 0 22px rgba(255, 184, 0, 0.42),
+      0 0 44px rgba(255, 184, 0, 0.2),
+      inset 0 0 20px rgba(255, 184, 0, 0.14);
+  }
+}
+
+.hud-subtle-pulse {
+  animation: hudGoldPulse 3.2s ease-in-out infinite;
+}
+
+/* ===== Neon glow (control pages) ===== */
+.neon-blue { box-shadow: 0 0 10px rgba(49, 133, 255, 0.45), 0 0 26px rgba(49, 133, 255, 0.22); }
+.neon-red { box-shadow: 0 0 10px rgba(255, 64, 87, 0.45), 0 0 26px rgba(255, 64, 87, 0.22); }
+.neon-gold { box-shadow: 0 0 10px rgba(255, 184, 0, 0.45), 0 0 26px rgba(255, 184, 0, 0.22); }
+
+/* ===== Ban slot grayscale ===== */
+.ban-grayscale { filter: grayscale(100%) brightness(0.5); }
+
+/* ===== Overlay scale 16:9 ===== */
+.overlay-container {
+  width: 1920px;
+  height: 1080px;
+  transform-origin: top left;
+}
+
+/* ===== Hero grid ===== */
+.hero-disabled {
+  filter: grayscale(80%) brightness(0.4);
+  pointer-events: none;
+}

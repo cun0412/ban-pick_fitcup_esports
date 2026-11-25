@@ -1,0 +1,912 @@
+[
+  {
+    "id": "evita",
+    "name": "Evita",
+    "role": "Pháp sư",
+    "image": "/heroes/evita.jpg",
+    "visible": true
+  },
+  {
+    "id": "tamyn",
+    "name": "Tamyn",
+    "role": "Đấu sĩ",
+    "image": "/heroes/tamyn.jpg",
+    "visible": true
+  },
+  {
+    "id": "flowborn-2",
+    "name": "Flowborn",
+    "role": "Pháp sư",
+    "image": "/heroes/flowborn-2.jpg",
+    "visible": true
+  },
+  {
+    "id": "flowborn",
+    "name": "Flowborn",
+    "role": "Xạ thủ",
+    "image": "/heroes/flowborn.jpg",
+    "visible": true
+  },
+  {
+    "id": "dyadia",
+    "name": "Dyadia",
+    "role": "Trợ thủ",
+    "image": "/heroes/dyadia.jpg",
+    "visible": true
+  },
+  {
+    "id": "11596",
+    "name": "Edras",
+    "role": "Đấu sĩ",
+    "image": "/heroes/11596.jpg",
+    "visible": true
+  },
+  {
+    "id": "goverra",
+    "name": "Goverra",
+    "role": "Pháp sư",
+    "image": "/heroes/goverra.jpg",
+    "visible": true
+  },
+  {
+    "id": "heino",
+    "name": "Heino",
+    "role": "Pháp sư",
+    "image": "/heroes/heino.jpg",
+    "visible": true
+  },
+  {
+    "id": "billow",
+    "name": "Billow",
+    "role": "Sát thủ",
+    "image": "/heroes/billow.jpg",
+    "visible": true
+  },
+  {
+    "id": "bolt-baron",
+    "name": "Bolt Baron",
+    "role": "Pháp sư",
+    "image": "/heroes/bolt-baron.jpg",
+    "visible": true
+  },
+  {
+    "id": "biron",
+    "name": "Biron",
+    "role": "Đấu sĩ",
+    "image": "/heroes/biron.jpg",
+    "visible": true
+  },
+  {
+    "id": "dolia",
+    "name": "Dolia",
+    "role": "Trợ thủ",
+    "image": "/heroes/dolia.jpg",
+    "visible": true
+  },
+  {
+    "id": "charlotte",
+    "name": "Charlotte",
+    "role": "Đấu sĩ",
+    "image": "/heroes/charlotte.jpg",
+    "visible": true
+  },
+  {
+    "id": "tachi",
+    "name": "Tachi",
+    "role": "Đấu sĩ",
+    "image": "/heroes/tachi.jpg",
+    "visible": true
+  },
+  {
+    "id": "dirak",
+    "name": "Dirak",
+    "role": "Pháp sư",
+    "image": "/heroes/dirak.jpg",
+    "visible": true
+  },
+  {
+    "id": "qi",
+    "name": "Qi",
+    "role": "Đấu sĩ",
+    "image": "/heroes/qi.jpg",
+    "visible": true
+  },
+  {
+    "id": "erin",
+    "name": "Erin",
+    "role": "Xạ thủ",
+    "image": "/heroes/erin.jpg",
+    "visible": true
+  },
+  {
+    "id": "ming",
+    "name": "Ming",
+    "role": "Trợ thủ",
+    "image": "/heroes/ming.jpg",
+    "visible": true
+  },
+  {
+    "id": "bijan",
+    "name": "Bijan",
+    "role": "Đấu sĩ",
+    "image": "/heroes/bijan.jpg",
+    "visible": true
+  },
+  {
+    "id": "bonnie",
+    "name": "Bonnie",
+    "role": "Pháp sư",
+    "image": "/heroes/bonnie.jpg",
+    "visible": true
+  },
+  {
+    "id": "teeri",
+    "name": "Teeri",
+    "role": "Xạ thủ",
+    "image": "/heroes/teeri.jpg",
+    "visible": true
+  },
+  {
+    "id": "yue",
+    "name": "Yue",
+    "role": "Pháp sư",
+    "image": "/heroes/yue.jpg",
+    "visible": true
+  },
+  {
+    "id": "yan",
+    "name": "Yan",
+    "role": "Đấu sĩ",
+    "image": "/heroes/yan.jpg",
+    "visible": true
+  },
+  {
+    "id": "aya",
+    "name": "Aya",
+    "role": "Trợ thủ",
+    "image": "/heroes/aya.jpg",
+    "visible": true
+  },
+  {
+    "id": "aoi",
+    "name": "Aoi",
+    "role": "Sát thủ",
+    "image": "/heroes/aoi.jpg",
+    "visible": true
+  },
+  {
+    "id": "iggy",
+    "name": "Iggy",
+    "role": "Pháp sư",
+    "image": "/heroes/iggy.jpg",
+    "visible": true
+  },
+  {
+    "id": "bright",
+    "name": "Bright",
+    "role": "Xạ thủ",
+    "image": "/heroes/bright.jpg",
+    "visible": true
+  },
+  {
+    "id": "lorion",
+    "name": "Lorion",
+    "role": "Pháp sư",
+    "image": "/heroes/lorion.jpg",
+    "visible": true
+  },
+  {
+    "id": "dextra",
+    "name": "Dextra",
+    "role": "Đấu sĩ",
+    "image": "/heroes/dextra.jpg",
+    "visible": true
+  },
+  {
+    "id": "sinestrea",
+    "name": "Sinestrea",
+    "role": "Sát thủ",
+    "image": "/heroes/sinestrea.jpg",
+    "visible": true
+  },
+  {
+    "id": "thorne",
+    "name": "Thorne",
+    "role": "Xạ thủ",
+    "image": "/heroes/thorne.jpg",
+    "visible": true
+  },
+  {
+    "id": "allain",
+    "name": "Allain",
+    "role": "Đấu sĩ",
+    "image": "/heroes/allain.jpg",
+    "visible": true
+  },
+  {
+    "id": "zata",
+    "name": "Zata",
+    "role": "Pháp sư",
+    "image": "/heroes/zata.jpg",
+    "visible": true
+  },
+  {
+    "id": "rouie",
+    "name": "Rouie",
+    "role": "Trợ thủ",
+    "image": "/heroes/rouie.jpg",
+    "visible": true
+  },
+  {
+    "id": "laville",
+    "name": "Laville",
+    "role": "Xạ thủ",
+    "image": "/heroes/laville.jpg",
+    "visible": true
+  },
+  {
+    "id": "paine",
+    "name": "Paine",
+    "role": "Sát thủ",
+    "image": "/heroes/paine.jpg",
+    "visible": true
+  },
+  {
+    "id": "ata",
+    "name": "Ata",
+    "role": "Đấu sĩ",
+    "image": "/heroes/ata.jpg",
+    "visible": true
+  },
+  {
+    "id": "keera",
+    "name": "Keera",
+    "role": "Sát thủ",
+    "image": "/heroes/keera.jpg",
+    "visible": true
+  },
+  {
+    "id": "ishar",
+    "name": "Ishar",
+    "role": "Pháp sư",
+    "image": "/heroes/ishar.jpg",
+    "visible": true
+  },
+  {
+    "id": "elandorr",
+    "name": "Eland’orr",
+    "role": "Xạ thủ",
+    "image": "/heroes/elandorr.jpg",
+    "visible": true
+  },
+  {
+    "id": "krizzix",
+    "name": "Krizzix",
+    "role": "Trợ thủ",
+    "image": "/heroes/krizzix.png",
+    "visible": true
+  },
+  {
+    "id": "volkath",
+    "name": "Volkath",
+    "role": "Đấu sĩ",
+    "image": "/heroes/volkath.jpg",
+    "visible": true
+  },
+  {
+    "id": "celica",
+    "name": "Celica",
+    "role": "Xạ thủ",
+    "image": "/heroes/celica.jpg",
+    "visible": true
+  },
+  {
+    "id": "zip",
+    "name": "Zip",
+    "role": "Trợ thủ",
+    "image": "/heroes/zip.jpg",
+    "visible": true
+  },
+  {
+    "id": "enzo",
+    "name": "Enzo",
+    "role": "Sát thủ",
+    "image": "/heroes/enzo.jpg",
+    "visible": true
+  },
+  {
+    "id": "yena",
+    "name": "Yena",
+    "role": "Đấu sĩ",
+    "image": "/heroes/yena.jpg",
+    "visible": true
+  },
+  {
+    "id": "errol",
+    "name": "Errol",
+    "role": "Đấu sĩ",
+    "image": "/heroes/errol.jpg",
+    "visible": true
+  },
+  {
+    "id": "capheny",
+    "name": "Capheny",
+    "role": "Xạ thủ",
+    "image": "/heroes/capheny.jpg",
+    "visible": true
+  },
+  {
+    "id": "hayate",
+    "name": "Hayate",
+    "role": "Xạ thủ",
+    "image": "/heroes/hayate.jpg",
+    "visible": true
+  },
+  {
+    "id": "darcy",
+    "name": "D’Arcy",
+    "role": "Pháp sư",
+    "image": "/heroes/darcy.jpg",
+    "visible": true
+  },
+  {
+    "id": "veres",
+    "name": "Veres",
+    "role": "Đấu sĩ",
+    "image": "/heroes/veres.jpg",
+    "visible": true
+  },
+  {
+    "id": "florentino",
+    "name": "Florentino",
+    "role": "Đấu sĩ",
+    "image": "/heroes/florentino.jpg",
+    "visible": true
+  },
+  {
+    "id": "sephera",
+    "name": "Sephera",
+    "role": "Trợ thủ",
+    "image": "/heroes/sephera.jpg",
+    "visible": true
+  },
+  {
+    "id": "quillen",
+    "name": "Quillen",
+    "role": "Sát thủ",
+    "image": "/heroes/quillen.jpg",
+    "visible": true
+  },
+  {
+    "id": "wiro",
+    "name": "Wiro",
+    "role": "Đỡ đòn",
+    "image": "/heroes/wiro.jpg",
+    "visible": true
+  },
+  {
+    "id": "richter",
+    "name": "Richter",
+    "role": "Đấu sĩ",
+    "image": "/heroes/richter.jpg",
+    "visible": true
+  },
+  {
+    "id": "elsu",
+    "name": "Elsu",
+    "role": "Xạ thủ",
+    "image": "/heroes/elsu.jpg",
+    "visible": true
+  },
+  {
+    "id": "ybneth",
+    "name": "Y’bneth",
+    "role": "Đỡ đòn",
+    "image": "/heroes/ybneth.jpg",
+    "visible": true
+  },
+  {
+    "id": "amily",
+    "name": "Amily",
+    "role": "Đấu sĩ",
+    "image": "/heroes/amily.jpg",
+    "visible": true
+  },
+  {
+    "id": "annette",
+    "name": "Annette",
+    "role": "Trợ thủ",
+    "image": "/heroes/annette.jpg",
+    "visible": true
+  },
+  {
+    "id": "baldum",
+    "name": "Baldum",
+    "role": "Đỡ đòn",
+    "image": "/heroes/baldum.jpg",
+    "visible": true
+  },
+  {
+    "id": "roxie",
+    "name": "Roxie",
+    "role": "Đấu sĩ",
+    "image": "/heroes/roxie.jpg",
+    "visible": true
+  },
+  {
+    "id": "marja",
+    "name": "Marja",
+    "role": "Pháp sư",
+    "image": "/heroes/marja.jpg",
+    "visible": true
+  },
+  {
+    "id": "rourke",
+    "name": "Rourke",
+    "role": "Đấu sĩ",
+    "image": "/heroes/rourke.jpg",
+    "visible": true
+  },
+  {
+    "id": "arum",
+    "name": "Arum",
+    "role": "Đỡ đòn",
+    "image": "/heroes/arum.jpg",
+    "visible": true
+  },
+  {
+    "id": "wisp",
+    "name": "Wisp",
+    "role": "Xạ thủ",
+    "image": "/heroes/wisp.jpg",
+    "visible": true
+  },
+  {
+    "id": "the-flash",
+    "name": "The Flash",
+    "role": "Pháp sư",
+    "image": "/heroes/the-flash.jpg",
+    "visible": true
+  },
+  {
+    "id": "max",
+    "name": "Max",
+    "role": "Đỡ đòn",
+    "image": "/heroes/max.jpg",
+    "visible": true
+  },
+  {
+    "id": "liliana",
+    "name": "Liliana",
+    "role": "Pháp sư",
+    "image": "/heroes/liliana.jpg",
+    "visible": true
+  },
+  {
+    "id": "tulen",
+    "name": "Tulen",
+    "role": "Pháp sư",
+    "image": "/heroes/tulen.jpg",
+    "visible": true
+  },
+  {
+    "id": "omen",
+    "name": "Omen",
+    "role": "Đấu sĩ",
+    "image": "/heroes/omen.jpg",
+    "visible": true
+  },
+  {
+    "id": "lindis",
+    "name": "Lindis",
+    "role": "Xạ thủ",
+    "image": "/heroes/lindis.jpg",
+    "visible": true
+  },
+  {
+    "id": "teemee",
+    "name": "TeeMee",
+    "role": "Trợ thủ",
+    "image": "/heroes/teemee.jpg",
+    "visible": true
+  },
+  {
+    "id": "moren",
+    "name": "Moren",
+    "role": "Xạ thủ",
+    "image": "/heroes/moren.jpg",
+    "visible": true
+  },
+  {
+    "id": "kilgroth",
+    "name": "Kil’Groth",
+    "role": "Đấu sĩ",
+    "image": "/heroes/kilgroth.gif",
+    "visible": true
+  },
+  {
+    "id": "xeniel",
+    "name": "Xeniel",
+    "role": "Trợ thủ",
+    "image": "/heroes/xeniel.jpg",
+    "visible": true
+  },
+  {
+    "id": "wonder-woman",
+    "name": "Wonder Woman",
+    "role": "Đấu sĩ",
+    "image": "/heroes/wonder-woman.jpg",
+    "visible": true
+  },
+  {
+    "id": "superman",
+    "name": "Superman",
+    "role": "Đấu sĩ",
+    "image": "/heroes/superman.jpg",
+    "visible": true
+  },
+  {
+    "id": "telannas",
+    "name": "Tel’Annas",
+    "role": "Xạ thủ",
+    "image": "/heroes/telannas.jpg",
+    "visible": true
+  },
+  {
+    "id": "astrid",
+    "name": "Astrid",
+    "role": "Đấu sĩ",
+    "image": "/heroes/astrid.jpg",
+    "visible": true
+  },
+  {
+    "id": "ryoma",
+    "name": "Ryoma",
+    "role": "Đấu sĩ",
+    "image": "/heroes/ryoma.jpg",
+    "visible": true
+  },
+  {
+    "id": "stuart",
+    "name": "Stuart",
+    "role": "Xạ thủ",
+    "image": "/heroes/stuart.jpg",
+    "visible": true
+  },
+  {
+    "id": "arduin",
+    "name": "Arduin",
+    "role": "Đấu sĩ",
+    "image": "/heroes/arduin.jpg",
+    "visible": true
+  },
+  {
+    "id": "zill",
+    "name": "Zill",
+    "role": "Pháp sư",
+    "image": "/heroes/zill.jpg",
+    "visible": true
+  },
+  {
+    "id": "murad",
+    "name": "Murad",
+    "role": "Sát thủ",
+    "image": "/heroes/murad.jpg",
+    "visible": true
+  },
+  {
+    "id": "ignis",
+    "name": "Ignis",
+    "role": "Pháp sư",
+    "image": "/heroes/ignis.jpg",
+    "visible": true
+  },
+  {
+    "id": "zuka",
+    "name": "Zuka",
+    "role": "Đấu sĩ",
+    "image": "/heroes/zuka.jpg",
+    "visible": true
+  },
+  {
+    "id": "airi",
+    "name": "Airi",
+    "role": "Sát thủ",
+    "image": "/heroes/airi.jpg",
+    "visible": true
+  },
+  {
+    "id": "kaine",
+    "name": "Kaine",
+    "role": "Sát thủ",
+    "image": "/heroes/kaine.jpg",
+    "visible": true
+  },
+  {
+    "id": "lauriel",
+    "name": "Lauriel",
+    "role": "Pháp sư",
+    "image": "/heroes/lauriel.jpg",
+    "visible": true
+  },
+  {
+    "id": "raz",
+    "name": "Raz",
+    "role": "Pháp sư",
+    "image": "/heroes/raz.jpg",
+    "visible": true
+  },
+  {
+    "id": "skud",
+    "name": "Skud",
+    "role": "Đấu sĩ",
+    "image": "/heroes/skud.jpg",
+    "visible": true
+  },
+  {
+    "id": "preyta",
+    "name": "Preyta",
+    "role": "Pháp sư",
+    "image": "/heroes/preyta.jpg",
+    "visible": true
+  },
+  {
+    "id": "ilumia",
+    "name": "Ilumia",
+    "role": "Pháp sư",
+    "image": "/heroes/ilumia.jpg",
+    "visible": true
+  },
+  {
+    "id": "slimz",
+    "name": "Slimz",
+    "role": "Xạ thủ",
+    "image": "/heroes/slimz.png",
+    "visible": true
+  },
+  {
+    "id": "arthur",
+    "name": "Arthur",
+    "role": "Đấu sĩ",
+    "image": "/heroes/arthur.jpg",
+    "visible": true
+  },
+  {
+    "id": "kriknak",
+    "name": "Kriknak",
+    "role": "Sát thủ",
+    "image": "/heroes/kriknak.png",
+    "visible": true
+  },
+  {
+    "id": "ngo-khong",
+    "name": "Ngộ Không",
+    "role": "Sát thủ",
+    "image": "/heroes/ngo-khong.jpg",
+    "visible": true
+  },
+  {
+    "id": "maloch",
+    "name": "Maloch",
+    "role": "Đấu sĩ",
+    "image": "/heroes/maloch.jpg",
+    "visible": true
+  },
+  {
+    "id": "helen",
+    "name": "Helen",
+    "role": "Trợ thủ",
+    "image": "/heroes/helen.jpg",
+    "visible": true
+  },
+  {
+    "id": "jinna",
+    "name": "Jinna",
+    "role": "Pháp sư",
+    "image": "/heroes/jinna.jpg",
+    "visible": true
+  },
+  {
+    "id": "cresht",
+    "name": "Cresht",
+    "role": "Đỡ đòn",
+    "image": "/heroes/cresht.jpg",
+    "visible": true
+  },
+  {
+    "id": "natalya",
+    "name": "Natalya",
+    "role": "Pháp sư",
+    "image": "/heroes/natalya.jpg",
+    "visible": true
+  },
+  {
+    "id": "lumburr",
+    "name": "Lumburr",
+    "role": "Đỡ đòn",
+    "image": "/heroes/lumburr.jpg",
+    "visible": true
+  },
+  {
+    "id": "fennik",
+    "name": "Fennik",
+    "role": "Xạ thủ",
+    "image": "/heroes/fennik.jpg",
+    "visible": true
+  },
+  {
+    "id": "aleister",
+    "name": "Aleister",
+    "role": "Pháp sư",
+    "image": "/heroes/aleister.jpg",
+    "visible": true
+  },
+  {
+    "id": "grakk",
+    "name": "Grakk",
+    "role": "Đỡ đòn",
+    "image": "/heroes/grakk.png",
+    "visible": true
+  },
+  {
+    "id": "nakroth",
+    "name": "Nakroth",
+    "role": "Sát thủ",
+    "image": "/heroes/nakroth.jpg",
+    "visible": true
+  },
+  {
+    "id": "taara",
+    "name": "Taara",
+    "role": "Đỡ đòn",
+    "image": "/heroes/taara.jpg",
+    "visible": true
+  },
+  {
+    "id": "toro",
+    "name": "Toro",
+    "role": "Đỡ đòn",
+    "image": "/heroes/toro.jpg",
+    "visible": true
+  },
+  {
+    "id": "yorn",
+    "name": "Yorn",
+    "role": "Xạ thủ",
+    "image": "/heroes/yorn.jpg",
+    "visible": true
+  },
+  {
+    "id": "gildur",
+    "name": "Gildur",
+    "role": "Pháp sư",
+    "image": "/heroes/gildur.jpg",
+    "visible": true
+  },
+  {
+    "id": "alice",
+    "name": "Alice",
+    "role": "Trợ thủ",
+    "image": "/heroes/alice.png",
+    "visible": true
+  },
+  {
+    "id": "azzenka",
+    "name": "Azzen’Ka",
+    "role": "Pháp sư",
+    "image": "/heroes/azzenka.jpg",
+    "visible": true
+  },
+  {
+    "id": "ormarr",
+    "name": "Ormarr",
+    "role": "Đấu sĩ",
+    "image": "/heroes/ormarr.jpg",
+    "visible": true
+  },
+  {
+    "id": "butterfly",
+    "name": "Butterfly",
+    "role": "Sát thủ",
+    "image": "/heroes/butterfly.jpg",
+    "visible": true
+  },
+  {
+    "id": "violet",
+    "name": "Violet",
+    "role": "Xạ thủ",
+    "image": "/heroes/violet.jpg",
+    "visible": true
+  },
+  {
+    "id": "chaugnar",
+    "name": "Chaugnar",
+    "role": "Trợ thủ",
+    "image": "/heroes/chaugnar.jpg",
+    "visible": true
+  },
+  {
+    "id": "dieu-thuyen",
+    "name": "Điêu Thuyền",
+    "role": "Pháp sư",
+    "image": "/heroes/dieu-thuyen.jpg",
+    "visible": true
+  },
+  {
+    "id": "zephys",
+    "name": "Zephys",
+    "role": "Đấu sĩ",
+    "image": "/heroes/zephys.jpg",
+    "visible": true
+  },
+  {
+    "id": "kahlii",
+    "name": "Kahlii",
+    "role": "Pháp sư",
+    "image": "/heroes/kahlii.png",
+    "visible": true
+  },
+  {
+    "id": "omega",
+    "name": "Omega",
+    "role": "Đỡ đòn",
+    "image": "/heroes/omega.jpg",
+    "visible": true
+  },
+  {
+    "id": "trieu-van",
+    "name": "Triệu Vân",
+    "role": "Đấu sĩ",
+    "image": "/heroes/trieu-van.jpg",
+    "visible": true
+  },
+  {
+    "id": "mganga",
+    "name": "Mganga",
+    "role": "Pháp sư",
+    "image": "/heroes/mganga.jpg",
+    "visible": true
+  },
+  {
+    "id": "krixi",
+    "name": "Krixi",
+    "role": "Pháp sư",
+    "image": "/heroes/krixi.png",
+    "visible": true
+  },
+  {
+    "id": "mina",
+    "name": "Mina",
+    "role": "Đỡ đòn",
+    "image": "/heroes/mina.png",
+    "visible": true
+  },
+  {
+    "id": "lu-bo",
+    "name": "Lữ Bố",
+    "role": "Đấu sĩ",
+    "image": "/heroes/lu-bo.jpg",
+    "visible": true
+  },
+  {
+    "id": "veera",
+    "name": "Veera",
+    "role": "Pháp sư",
+    "image": "/heroes/veera.jpg",
+    "visible": true
+  },
+  {
+    "id": "thane",
+    "name": "Thane",
+    "role": "Đỡ đòn",
+    "image": "/heroes/thane.png",
+    "visible": true
+  },
+  {
+    "id": "valhein",
+    "name": "Valhein",
+    "role": "Xạ thủ",
+    "image": "/heroes/valhein.jpg",
+    "visible": true
+  }
+]

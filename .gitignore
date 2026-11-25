@@ -1,0 +1,14 @@
+# Dependencies & build
+node_modules/
+dist/
+.vercel/
+
+# Environment variables (không đẩy key lên GitHub)
+.env
+.env.local
+.env.*.local
+
+# Logs & OS files
+*.log
+.DS_Store
+Thumbs.db
