@@ -1,36 +1,82 @@
 import { useEffect, useRef, useCallback, useState } from 'react';
 
+/**
+ * Hook đồng hồ đếm ngược chuẩn theo mốc thời gian thực (deadline timestamp),
+ * không bị trôi/lag khi tab chạy nền hoặc đồng bộ qua mạng.
+ */
 export function useTimer(maxSeconds: number, onExpire?: () => void) {
   const [seconds, setSeconds] = useState(maxSeconds);
+  const [pausedSeconds, setPausedSeconds] = useState(maxSeconds);
   const [running, setRunning] = useState(false);
-  const intervalRef = useRef<number | null>(null);
+  const [deadline, setDeadline] = useState<number | null>(null);
+
+  const deadlineRef = useRef<number | null>(null);
+  const secondsRef = useRef(maxSeconds);
+  secondsRef.current = seconds;
   const expireCbRef = useRef(onExpire);
   expireCbRef.current = onExpire;
 
-  const start = useCallback(() => setRunning(true), []);
-  const pause = useCallback(() => setRunning(false), []);
-  const reset = useCallback((newMax?: number) => {
-    setRunning(false);
-    setSeconds(newMax ?? maxSeconds);
+  const start = useCallback(() => {
+    const base = secondsRef.current > 0 ? secondsRef.current : maxSeconds;
+    const dl = Date.now() + base * 1000;
+    deadlineRef.current = dl;
+    setDeadline(dl);
+    setSeconds(base);
+    setPausedSeconds(base);
+    setRunning(true);
   }, [maxSeconds]);
 
+  const pause = useCallback(() => {
+    const remain = deadlineRef.current
+      ? Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000))
+      : secondsRef.current;
+    deadlineRef.current = null;
+    setDeadline(null);
+    setRunning(false);
+    setSeconds(remain);
+    setPausedSeconds(remain);
+  }, []);
+
+  const reset = useCallback(
+    (newMax?: number) => {
+      const val = newMax ?? maxSeconds;
+      deadlineRef.current = null;
+      setDeadline(null);
+      setRunning(false);
+      setSeconds(val);
+      setPausedSeconds(val);
+    },
+    [maxSeconds]
+  );
+
   useEffect(() => {
-    if (!running) {
-      if (intervalRef.current) clearInterval(intervalRef.current);
-      return;
-    }
-    intervalRef.current = window.setInterval(() => {
-      setSeconds(prev => {
-        if (prev <= 1) {
-          setRunning(false);
-          expireCbRef.current?.();
-          return 0;
-        }
-        return prev - 1;
-      });
-    }, 1000);
-    return () => { if (intervalRef.current) clearInterval(intervalRef.current); };
+    if (!running || !deadlineRef.current) return;
+
+    const tick = () => {
+      if (!deadlineRef.current) return;
+      const remain = Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000));
+      setSeconds(remain);
+      if (remain <= 0) {
+        deadlineRef.current = null;
+        setDeadline(null);
+        setRunning(false);
+        setPausedSeconds(0);
+        expireCbRef.current?.();
+      }
+    };
+
+    const id = window.setInterval(tick, 200);
+    return () => clearInterval(id);
   }, [running]);
 
-  return { seconds, running, start, pause, reset, setSeconds };
+  return {
+    seconds,
+    pausedSeconds,
+    running,
+    deadline,
+    start,
+    pause,
+    reset,
+    setSeconds,
+  };
 }

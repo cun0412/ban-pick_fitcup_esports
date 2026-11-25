@@ -69,6 +69,7 @@ export async function handleConfig(req: ApiRequest): Promise<ApiResponse> {
 export async function handleLive(req: ApiRequest): Promise<ApiResponse> {
   const db = getServerSupabase();
   const room = req.query.room || req.body?.room;
+  const since = req.query.since;
 
   if (req.method === 'GET') {
     if (!room) return { status: 400, data: { error: 'Thiếu room' } };
@@ -79,9 +80,22 @@ export async function handleLive(req: ApiRequest): Promise<ApiResponse> {
         .eq('room_id', room)
         .maybeSingle();
       if (error) return { status: 500, data: { error: error.message } };
+      if (data && since && data.updated_at === since) {
+        return {
+          status: 200,
+          data: { unchanged: true, updated_at: data.updated_at },
+        };
+      }
       return { status: 200, data: data || null };
     }
-    return { status: 200, data: memoryStore.liveRooms.get(room) || null };
+    const mem = memoryStore.liveRooms.get(room);
+    if (mem && since && mem.updated_at === since) {
+      return {
+        status: 200,
+        data: { unchanged: true, updated_at: mem.updated_at },
+      };
+    }
+    return { status: 200, data: mem || null };
   }
 
   if (req.method === 'POST') {

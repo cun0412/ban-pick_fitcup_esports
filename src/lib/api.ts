@@ -54,13 +54,20 @@ export async function saveAppConfig(key: string, value: any): Promise<boolean> {
   }
 }
 
-export async function fetchLiveRoom(room: string): Promise<{
-  event_type: string;
-  payload: any;
-  updated_at: string;
+export async function fetchLiveRoom(
+  room: string,
+  since?: string
+): Promise<{
+  event_type?: string;
+  payload?: any;
+  updated_at?: string;
+  unchanged?: boolean;
 } | null> {
   try {
-    const res = await fetch(`/api/live?room=${encodeURIComponent(room)}`);
+    const query = since
+      ? `room=${encodeURIComponent(room)}&since=${encodeURIComponent(since)}`
+      : `room=${encodeURIComponent(room)}`;
+    const res = await fetch(`/api/live?${query}`, { cache: 'no-store' });
     if (!res.ok) return null;
     return await res.json();
   } catch {

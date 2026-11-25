@@ -82,6 +82,7 @@ function extractPersisted(s: LQStore): PersistedLQState {
 
 export interface LQStore extends PersistedLQState {
   heroes: LQHero[];
+  heroesVersion: number;
   selectedHeroId: string | null;
 
   hydrate: () => Promise<void>;
@@ -113,6 +114,7 @@ export const useLQStore = create<LQStore>((set, get) => ({
   isComplete: false,
   history: [],
   heroes: buildMergedHeroes(),
+  heroesVersion: 0,
   selectedHeroId: null,
 
   hydrate: async () => {
@@ -126,6 +128,7 @@ export const useLQStore = create<LQStore>((set, get) => ({
       return {
         ...prev,
         heroes: buildMergedHeroes(overrides),
+        heroesVersion: Date.now(),
         ...(saved
           ? {
               phases,
@@ -146,7 +149,7 @@ export const useLQStore = create<LQStore>((set, get) => ({
 
   refreshHeroes: async () => {
     const overrides = await fetchHeroOverrides();
-    set({ heroes: buildMergedHeroes(overrides) });
+    set({ heroes: buildMergedHeroes(overrides), heroesVersion: Date.now() });
   },
 
   selectHero: (id) => set({ selectedHeroId: id }),

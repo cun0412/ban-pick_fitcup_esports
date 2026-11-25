@@ -60,7 +60,7 @@ export default function LQControl() {
 
   const timer = useTimer(lq.timerMax, handleTimerExpire);
 
-  // Tạo payload đồng bộ sang Overlay
+  // Tạo payload đồng bộ sang Overlay (bỏ danh sách 130 tướng khỏi payload để nhẹ ~1.5KB và gửi kèm selectedHeroId đang chọn)
   const buildSyncPayload = useCallback(
     () => ({
       bansA: lq.bansA,
@@ -69,13 +69,17 @@ export default function LQControl() {
       picksB: lq.picksB,
       phases: lq.phases,
       currentPhaseIndex: lq.currentPhaseIndex,
+      selectedHeroId: lq.selectedHeroId,
+      heroesVersion: lq.heroesVersion,
       isComplete: lq.isComplete,
-      heroes: lq.heroes,
       teamA: settings.teamA,
       teamB: settings.teamB,
       tournamentName: settings.tournamentName,
       roundName: settings.roundName,
-      timerSeconds: timer.seconds,
+      timerSeconds: timer.pausedSeconds,
+      timerMax: lq.timerMax,
+      timerRunning: timer.running,
+      timerDeadline: timer.deadline,
       timerEnabled: settings.timerEnabled,
       overlayBg: settings.overlayBg,
     }),
@@ -86,15 +90,19 @@ export default function LQControl() {
       lq.picksB,
       lq.phases,
       lq.currentPhaseIndex,
+      lq.selectedHeroId,
+      lq.heroesVersion,
       lq.isComplete,
-      lq.heroes,
+      lq.timerMax,
       settings.teamA,
       settings.teamB,
       settings.tournamentName,
       settings.roundName,
       settings.timerEnabled,
       settings.overlayBg,
-      timer.seconds,
+      timer.pausedSeconds,
+      timer.running,
+      timer.deadline,
     ]
   );
 
@@ -453,6 +461,7 @@ export default function LQControl() {
           picksA={lq.picksA}
           picksB={lq.picksB}
           heroes={lq.heroes}
+          selectedHeroId={lq.selectedHeroId}
           teamA={settings.teamA}
           teamB={settings.teamB}
           currentPhase={currentPhase}
@@ -460,6 +469,7 @@ export default function LQControl() {
           tournamentName={settings.tournamentName}
           roundName={settings.roundName}
           timerSeconds={timer.seconds}
+          timerMax={lq.timerMax}
           timerEnabled={settings.timerEnabled}
           isComplete={lq.isComplete}
         />

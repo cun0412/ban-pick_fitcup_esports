@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useId, useRef, useState } from 'react';
 import type { ValorantMap } from '../../types';
 
 const SLICE_COLORS = [
@@ -25,7 +25,7 @@ interface SpinWheelProps {
 
 /**
  * Kiểu 1: Vòng quay may mắn (Wheel) 60fps bằng SVG + requestAnimationFrame
- * Kết quả đã được quyết định trước qua targetMapId, wheel quay và dừng đúng kim chỉ trên đỉnh
+ * Hiển thị ảnh nền từng map trực tiếp trong mỗi múi quay, dừng đúng kim chỉ trên đỉnh
  */
 export default function SpinWheel({
   maps,
@@ -37,7 +37,9 @@ export default function SpinWheel({
   onFinish,
   size = 460,
 }: SpinWheelProps) {
+  const uid = useId().replace(/:/g, '');
   const [rotation, setRotation] = useState(0);
+  const [fallbackSplashIds, setFallbackSplashIds] = useState<Record<string, boolean>>({});
   const rotRef = useRef(0);
   const onTickRef = useRef(onTick);
   const onFinishRef = useRef(onFinish);
@@ -51,9 +53,7 @@ export default function SpinWheel({
     if (targetIndex < 0) return;
 
     const sliceAngle = 360 / maps.length;
-    // Tâm của múi targetIndex tính từ góc 0 ở đỉnh (12 giờ):
-    // Múi i chiếm [i * sliceAngle, (i+1) * sliceAngle] theo chiều kim đồng hồ
-    // Để đưa tâm múi targetIndex lên đỉnh (0 độ), wheel cần xoay góc (360 - centerAngle) mod 360
+    // Tâm của múi targetIndex tính từ góc 0 ở đỉnh (12 giờ)
     const centerAngle = targetIndex * sliceAngle + sliceAngle / 2;
     const desiredMod = (360 - centerAngle + 360) % 360;
 
@@ -61,11 +61,8 @@ export default function SpinWheel({
     const currentMod = ((startRot % 360) + 360) % 360;
     const deltaMod = (desiredMod - currentMod + 360) % 360;
 
-    // Số vòng quay thêm dựa trên duration (5 - 10 vòng)
     const extraSpins = Math.max(5, Math.round(duration * 1.2)) * 360;
-    // Thêm chút lệch ngẫu nhiên trong phạm vi ±30% múi cho tự nhiên nhưng vẫn trúng chắc chắn
     const totalDelta = extraSpins + deltaMod;
-    const endRot = startRot + totalDelta;
 
     const durationMs = Math.max(1000, duration * 1000);
     const startTime = performance.now();
@@ -100,6 +97,7 @@ export default function SpinWheel({
   }, [isSpinning, targetMapId, triggerId, duration, maps]);
 
   const radius = size / 2;
+  const outerRadius = radius - 8;
   const sliceDeg = maps.length > 0 ? 360 / maps.length : 360;
 
   const polarToCartesian = (cx: number, cy: number, r: number, angleDeg: number) => {
@@ -108,8 +106,8 @@ export default function SpinWheel({
   };
 
   const describeSlice = (startAngle: number, endAngle: number) => {
-    const start = polarToCartesian(radius, radius, radius - 8, endAngle);
-    const end = polarToCartesian(radius, radius, radius - 8, startAngle);
+    const start = polarToCartesian(radius, radius, outerRadius, endAngle);
+    const end = polarToCartesian(radius, radius, outerRadius, startAngle);
     const largeArcFlag = endAngle - startAngle <= 180 ? '0' : '1';
     return [
       'M',
@@ -119,8 +117,8 @@ export default function SpinWheel({
       start.x,
       start.y,
       'A',
-      radius - 8,
-      radius - 8,
+      outerRadius,
+      outerRadius,
       0,
       largeArcFlag,
       0,
@@ -129,6 +127,16 @@ export default function SpinWheel({
       'Z',
     ].join(' ');
   };
+
+  // Kích thước vùng ảnh hướng thẳng lên (sau đó xoay theo midAngle để khớp gọn vào múi)
+  const sliceImgWidth =
+    maps.length <= 2
+      ? size
+      : Math.max(
+          outerRadius * 1.18,
+          2 * outerRadius * Math.sin((sliceDeg * Math.PI) / 360) + 16
+        );
+  const sliceImgHeight = maps.length === 1 ? size : outerRadius + 8;
 
   return (
     <div className="relative flex flex-col items-center justify-center select-none">
@@ -149,26 +157,113 @@ export default function SpinWheel({
           style={{ transform: `rotate(${rotation}deg)` }}
           className="rounded-full bg-[#0f1923]"
         >
+          <defs>
+            {/* Lớp phủ tối giúp chữ tên map nổi bật rõ ràng trên mọi nền ảnh */}
+            <radialGradient id={`${uid}-vignette`} cx="50%" cy="50%" r="50%">
+              <stop offset="15%" stopColor="#070b14" stopOpacity="0.88" />
+              <stop offset="68%" stopColor="#070b14" stopOpacity="0.38" />
+              <stop offset="100%" stopColor="#070b14" stopOpacity="0.22" />
+            </radialGradient>
+
+            {maps.map((m, i) => {
+              const startAngle = i * sliceDeg;
+              const endAngle = (i + 1) * sliceDeg;
+              return (
+                <clipPath key={`clip-${m.id}`} id={`${uid}-slice-${i}`}>
+                  {maps.length === 1 ? (
+                    <circle cx={radius} cy={radius} r={outerRadius} />
+                  ) : (
+                    <path d={describeSlice(startAngle, endAngle)} />
+                  )}
+                </clipPath>
+              );
+            })}
+          </defs>
+
           {maps.map((m, i) => {
             const startAngle = i * sliceDeg;
             const endAngle = (i + 1) * sliceDeg;
             const midAngle = startAngle + sliceDeg / 2;
             const color = SLICE_COLORS[i % SLICE_COLORS.length];
+            const useRemoteFallback = fallbackSplashIds[m.id];
+            const imgSrc = useRemoteFallback
+              ? m.splash
+              : m.localSplash || m.splash;
 
             return (
               <g key={m.id}>
-                <path
-                  d={describeSlice(startAngle, endAngle)}
-                  fill={color}
-                  stroke="#ece8e1"
-                  strokeWidth="2"
-                />
+                {/* Nền màu dự phòng trong lúc ảnh đang tải */}
+                {maps.length === 1 ? (
+                  <circle cx={radius} cy={radius} r={outerRadius} fill={color} />
+                ) : (
+                  <path d={describeSlice(startAngle, endAngle)} fill={color} />
+                )}
+
+                {/* Ảnh map được cắt đúng theo hình múi quạt và hướng theo tâm múi */}
+                {imgSrc && (
+                  <g clipPath={`url(#${uid}-slice-${i})`}>
+                    <image
+                      href={imgSrc}
+                      x={maps.length === 1 ? 0 : radius - sliceImgWidth / 2}
+                      y={maps.length === 1 ? 0 : 4}
+                      width={sliceImgWidth}
+                      height={sliceImgHeight}
+                      preserveAspectRatio="xMidYMid slice"
+                      transform={
+                        maps.length === 1
+                          ? undefined
+                          : `rotate(${midAngle}, ${radius}, ${radius})`
+                      }
+                      onError={() => {
+                        if (!useRemoteFallback && m.splash && m.localSplash) {
+                          setFallbackSplashIds((prev) => ({
+                            ...prev,
+                            [m.id]: true,
+                          }));
+                        }
+                      }}
+                    />
+                    <circle
+                      cx={radius}
+                      cy={radius}
+                      r={outerRadius}
+                      fill={`url(#${uid}-vignette)`}
+                    />
+                  </g>
+                )}
+
+                {/* Viền phân cách giữa các múi */}
+                {maps.length === 1 ? (
+                  <circle
+                    cx={radius}
+                    cy={radius}
+                    r={outerRadius}
+                    fill="none"
+                    stroke="#ece8e1"
+                    strokeWidth="2.5"
+                  />
+                ) : (
+                  <path
+                    d={describeSlice(startAngle, endAngle)}
+                    fill="none"
+                    stroke="#ece8e1"
+                    strokeOpacity="0.85"
+                    strokeWidth="2.5"
+                  />
+                )}
+
+                {/* Tên map với viền tối đậm dễ đọc trên ảnh */}
                 <text
                   x={radius}
-                  y={radius - radius * 0.62}
+                  y={radius - outerRadius * 0.64}
                   fill="#ffffff"
-                  fontSize={maps.length > 9 ? 14 : 17}
+                  stroke="rgba(7, 11, 20, 0.94)"
+                  strokeWidth="5"
+                  strokeLinejoin="round"
+                  paintOrder="stroke fill"
+                  fontSize={maps.length > 9 ? 14 : size >= 440 ? 19 : 16}
                   fontWeight="800"
+                  letterSpacing="0.06em"
                   fontFamily="'Chakra Petch', 'Be Vietnam Pro', sans-serif"
                   textAnchor="middle"
                   transform={`rotate(${midAngle}, ${radius}, ${radius})`}
@@ -178,14 +273,21 @@ export default function SpinWheel({
               </g>
             );
           })}
+
           {/* Tâm bánh xe */}
           <circle
             cx={radius}
             cy={radius}
-            r={size * 0.08}
+            r={size * 0.085}
             fill="#0f1923"
             stroke="#fbbf24"
             strokeWidth="4"
+          />
+          <circle
+            cx={radius}
+            cy={radius}
+            r={size * 0.035}
+            fill="#ff4655"
           />
         </svg>
       </div>

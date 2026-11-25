@@ -17,6 +17,7 @@ interface HeroAvatarProps {
   className?: string;
   imgClassName?: string;
   textSize?: string;
+  eager?: boolean;
 }
 
 /**
@@ -27,6 +28,7 @@ export default function HeroAvatar({
   className = 'w-full h-full',
   imgClassName = 'w-full h-full object-cover',
   textSize = 'text-lg',
+  eager = false,
 }: HeroAvatarProps) {
   const [hasError, setHasError] = useState(false);
 
@@ -63,7 +65,8 @@ export default function HeroAvatar({
       alt={hero.name}
       className={`${className} ${imgClassName}`}
       onError={() => setHasError(true)}
-      loading="lazy"
+      loading={eager ? 'eager' : 'lazy'}
+      decoding="async"
     />
   );
 }

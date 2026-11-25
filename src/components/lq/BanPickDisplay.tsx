@@ -1,5 +1,5 @@
 import { useMemo } from 'react';
-import { motion, AnimatePresence } from 'framer-motion';
+import { motion } from 'framer-motion';
 import HeroAvatar from './HeroAvatar';
 import HudCorners from '../common/HudCorners';
 import type { BPPhase, BPSlot, LQHero, TeamConfig, TeamSide } from '../../types';
@@ -10,6 +10,7 @@ interface BanPickDisplayProps {
   picksA: BPSlot[];
   picksB: BPSlot[];
   heroes: LQHero[];
+  selectedHeroId?: string | null;
   teamA: TeamConfig;
   teamB: TeamConfig;
   currentPhase: BPPhase | null;
@@ -17,6 +18,7 @@ interface BanPickDisplayProps {
   tournamentName: string;
   roundName: string;
   timerSeconds: number;
+  timerMax?: number;
   timerEnabled: boolean;
   isComplete: boolean;
   isOverlay?: boolean;
@@ -31,6 +33,7 @@ export default function BanPickDisplay({
   picksA,
   picksB,
   heroes,
+  selectedHeroId = null,
   teamA,
   teamB,
   currentPhase,
@@ -38,6 +41,7 @@ export default function BanPickDisplay({
   tournamentName,
   roundName,
   timerSeconds,
+  timerMax = 30,
   timerEnabled,
   isComplete,
   isOverlay = false,
@@ -47,6 +51,11 @@ export default function BanPickDisplay({
     heroes.forEach((h) => m.set(h.id, h));
     return m;
   }, [heroes]);
+
+  const previewHero = useMemo(
+    () => (selectedHeroId ? heroMap.get(selectedHeroId) ?? null : null),
+    [selectedHeroId, heroMap]
+  );
 
   const renderTeamColumn = (
     side: TeamSide,
@@ -99,7 +108,7 @@ export default function BanPickDisplay({
           </div>
         </div>
 
-        {/* Hàng Ban (thumbnail 6px radius, grayscale + X đỏ) */}
+        {/* Hàng Ban (thumbnail 6px radius, grayscale + X đỏ; hỗ trợ xem trước khi chưa khóa) */}
         <div className={`flex gap-2 ${isLeft ? 'justify-start' : 'justify-end'}`}>
           {bans.map((slot, idx) => {
             const hero = slot.heroId ? heroMap.get(slot.heroId) : null;
@@ -108,6 +117,7 @@ export default function BanPickDisplay({
               currentPhase?.team === side &&
               currentPhase?.action === 'ban' &&
               currentSlotIndex === idx;
+            const isPreview = !hero && isActive && Boolean(previewHero);
 
             return (
               <div
@@ -122,50 +132,58 @@ export default function BanPickDisplay({
                     : 'border border-white/10 bg-[#0b1018]/75'
                 }`}
               >
-                <AnimatePresence mode="wait">
-                  {hero ? (
-                    <motion.div
-                      key={hero.id}
-                      initial={{ scale: 1.2, x: -5 }}
-                      animate={{
-                        scale: 1,
-                        x: [0, -5, 5, -3, 3, 0],
-                      }}
-                      transition={{ duration: 0.42 }}
-                      className="w-full h-full relative"
-                    >
-                      <div className="w-full h-full ban-grayscale">
-                        <HeroAvatar hero={hero} textSize="text-sm" />
-                      </div>
-                      <motion.div
-                        initial={{ opacity: 0.85 }}
-                        animate={{ opacity: 0.35 }}
-                        transition={{ duration: 0.55 }}
-                        className="absolute inset-0 bg-[#FF343F]/45"
-                      />
-                      <div className="absolute inset-0 flex items-center justify-center">
-                        <span
-                          className={`text-[#FF343F] font-display font-black drop-shadow-[0_0_8px_rgba(255,52,63,0.9)] ${
-                            isOverlay ? 'text-4xl' : 'text-2xl'
-                          }`}
-                        >
-                          ✕
-                        </span>
-                      </div>
-                    </motion.div>
-                  ) : (
-                    <div className="w-full h-full flex flex-col items-center justify-center text-white/25">
-                      <span className="text-[10px] font-display font-bold">BAN</span>
-                      <span className="text-xs font-bold">{idx + 1}</span>
+                {hero ? (
+                  <motion.div
+                    key={hero.id}
+                    initial={{ scale: 1.2, x: -5 }}
+                    animate={{
+                      scale: 1,
+                      x: [0, -5, 5, -3, 3, 0],
+                    }}
+                    transition={{ duration: 0.42 }}
+                    className="w-full h-full relative"
+                  >
+                    <div className="w-full h-full ban-grayscale">
+                      <HeroAvatar hero={hero} textSize="text-sm" eager />
                     </div>
-                  )}
-                </AnimatePresence>
+                    <motion.div
+                      initial={{ opacity: 0.85 }}
+                      animate={{ opacity: 0.35 }}
+                      transition={{ duration: 0.55 }}
+                      className="absolute inset-0 bg-[#FF343F]/45"
+                    />
+                    <div className="absolute inset-0 flex items-center justify-center">
+                      <span
+                        className={`text-[#FF343F] font-display font-black drop-shadow-[0_0_8px_rgba(255,52,63,0.9)] ${
+                          isOverlay ? 'text-4xl' : 'text-2xl'
+                        }`}
+                      >
+                        ✕
+                      </span>
+                    </div>
+                  </motion.div>
+                ) : isPreview && previewHero ? (
+                  <div className="w-full h-full relative">
+                    <div className="w-full h-full opacity-90">
+                      <HeroAvatar hero={previewHero} textSize="text-sm" eager />
+                    </div>
+                    <div className="absolute inset-0 bg-[#FFB800]/15 ring-1 ring-inset ring-[#FFB800]/70" />
+                    <div className="absolute bottom-0 inset-x-0 bg-black/75 text-[#FFB800] text-[9px] font-display font-bold text-center py-0.5 tracking-wider">
+                      CHỌN
+                    </div>
+                  </div>
+                ) : (
+                  <div className="w-full h-full flex flex-col items-center justify-center text-white/25">
+                    <span className="text-[10px] font-display font-bold">BAN</span>
+                    <span className="text-xs font-bold">{idx + 1}</span>
+                  </div>
+                )}
               </div>
             );
           })}
         </div>
 
-        {/* 5 Slot Pick dọc (8-10px radius -> 9px, active gold glow) */}
+        {/* 5 Slot Pick dọc (8-10px radius -> 9px, active gold glow; hỗ trợ xem trước khi chưa khóa) */}
         <div className="flex flex-col gap-2.5 flex-1">
           {picks.map((slot, idx) => {
             const hero = slot.heroId ? heroMap.get(slot.heroId) : null;
@@ -174,6 +192,8 @@ export default function BanPickDisplay({
               currentPhase?.team === side &&
               currentPhase?.action === 'pick' &&
               currentSlotIndex === idx;
+            const isPreview = !hero && isActive && Boolean(previewHero);
+            const displayHero = hero || (isPreview ? previewHero : null);
 
             return (
               <div
@@ -196,33 +216,53 @@ export default function BanPickDisplay({
                     isOverlay ? 'w-[134px]' : 'w-16'
                   }`}
                 >
-                  <AnimatePresence mode="wait">
-                    {hero ? (
+                  {hero ? (
+                    <motion.div
+                      key={hero.id}
+                      initial={{ scale: 0.78, opacity: 0.4 }}
+                      animate={{ scale: 1, opacity: 1 }}
+                      transition={{ type: 'spring', stiffness: 280, damping: 22 }}
+                      className="w-full h-full relative"
+                    >
+                      <HeroAvatar
+                        hero={hero}
+                        textSize={isOverlay ? 'text-4xl' : 'text-xl'}
+                        eager
+                      />
                       <motion.div
-                        key={hero.id}
-                        initial={{ scale: 0.7, opacity: 0 }}
-                        animate={{ scale: 1, opacity: 1 }}
-                        transition={{ type: 'spring', stiffness: 250, damping: 22 }}
-                        className="w-full h-full relative"
-                      >
-                        <HeroAvatar hero={hero} textSize={isOverlay ? 'text-4xl' : 'text-xl'} />
-                        <motion.div
-                          initial={{ opacity: 0.7 }}
-                          animate={{ opacity: 0 }}
-                          transition={{ duration: 0.65 }}
-                          className="absolute inset-0"
-                          style={{
-                            boxShadow: `inset 0 0 36px ${hudTeamColor}`,
-                            backgroundColor: `${hudTeamColor}35`,
-                          }}
+                        initial={{ opacity: 0.7 }}
+                        animate={{ opacity: 0 }}
+                        transition={{ duration: 0.65 }}
+                        className="absolute inset-0"
+                        style={{
+                          boxShadow: `inset 0 0 36px ${hudTeamColor}`,
+                          backgroundColor: `${hudTeamColor}35`,
+                        }}
+                      />
+                    </motion.div>
+                  ) : isPreview && previewHero ? (
+                    <div className="w-full h-full relative">
+                      <div className="w-full h-full opacity-90">
+                        <HeroAvatar
+                          hero={previewHero}
+                          textSize={isOverlay ? 'text-4xl' : 'text-xl'}
+                          eager
                         />
-                      </motion.div>
-                    ) : (
-                      <div className="w-full h-full flex items-center justify-center text-white/20 font-display font-bold text-lg">
-                        {idx + 1}
                       </div>
-                    )}
-                  </AnimatePresence>
+                      <div className="absolute inset-0 bg-[#FFB800]/12 ring-2 ring-inset ring-[#FFB800]/65" />
+                      <div
+                        className={`absolute bottom-0 inset-x-0 bg-black/75 text-[#FFB800] font-display font-bold text-center tracking-wider ${
+                          isOverlay ? 'text-[11px] py-0.5' : 'text-[9px] py-[1px]'
+                        }`}
+                      >
+                        CHƯA KHÓA
+                      </div>
+                    </div>
+                  ) : (
+                    <div className="w-full h-full flex items-center justify-center text-white/20 font-display font-bold text-lg">
+                      {idx + 1}
+                    </div>
+                  )}
                 </div>
 
                 {/* Tên tướng + tên người chơi */}
@@ -236,9 +276,13 @@ export default function BanPickDisplay({
                       isOverlay ? 'text-2xl' : 'text-sm'
                     } ${hero ? 'text-white' : isActive ? 'text-[#FFB800]' : 'text-gray-500'}`}
                   >
-                    {hero ? hero.name : isActive ? 'Đang chọn...' : `Vị trí ${idx + 1}`}
+                    {displayHero
+                      ? displayHero.name
+                      : isActive
+                      ? 'Đang chọn...'
+                      : `Vị trí ${idx + 1}`}
                   </div>
-                  {(slot.playerName || hero?.role) && (
+                  {(slot.playerName || displayHero?.role || isPreview) && (
                     <div
                       className={`flex items-center gap-2 truncate ${
                         isLeft ? 'justify-start' : 'justify-end'
@@ -249,11 +293,16 @@ export default function BanPickDisplay({
                           {slot.playerName}
                         </span>
                       )}
-                      {hero?.role && (
-                        <span className="text-gray-400 text-xs">
-                          {slot.playerName ? `• ${hero.role}` : hero.role}
+                      {isPreview ? (
+                        <span className="text-amber-300/80 text-xs">
+                          {slot.playerName ? '• ' : ''}
+                          {displayHero?.role ? `Chờ khóa • ${displayHero.role}` : 'Chờ khóa'}
                         </span>
-                      )}
+                      ) : displayHero?.role ? (
+                        <span className="text-gray-400 text-xs">
+                          {slot.playerName ? `• ${displayHero.role}` : displayHero.role}
+                        </span>
+                      ) : null}
                     </div>
                   )}
                 </div>
@@ -302,35 +351,66 @@ export default function BanPickDisplay({
             isOverlay ? 'w-72 gap-6' : 'w-40 gap-3'
           }`}
         >
-          {timerEnabled && (
-            <div
-              className={`rounded-full flex flex-col items-center justify-center border-2 transition-colors bg-[#0b1018]/92 ${
-                isOverlay ? 'w-44 h-44' : 'w-24 h-24'
-              } ${
-                timerSeconds <= 5 && !isComplete
-                  ? 'hud-neon-red text-[#FF4057]'
-                  : 'text-white'
-              }`}
-              style={{
-                borderColor:
-                  timerSeconds <= 5 && !isComplete ? '#FF4057' : activeColor,
-                boxShadow: `0 0 24px ${
-                  timerSeconds <= 5 && !isComplete ? 'rgba(255,64,87,0.35)' : `${activeColor}35`
-                }, inset 0 0 18px rgba(0,0,0,0.6)`,
-              }}
-            >
-              <span
-                className={`font-display font-black leading-none ${
-                  isOverlay ? 'text-7xl' : 'text-3xl'
-                }`}
+          {timerEnabled && (() => {
+            const isLow = timerSeconds <= 5 && !isComplete;
+            const ringColor = isLow ? '#FF4057' : activeColor;
+            const progress = isComplete
+              ? 1
+              : Math.max(0, Math.min(1, timerSeconds / Math.max(1, timerMax)));
+            const radius = 46;
+            const circumference = 2 * Math.PI * radius;
+            const dashOffset = circumference * (1 - progress);
+
+            return (
+              <div
+                className={`relative rounded-full flex flex-col items-center justify-center bg-[#0b1018]/92 ${
+                  isOverlay ? 'w-44 h-44' : 'w-24 h-24'
+                } ${isLow ? 'text-[#FF4057]' : 'text-white'}`}
+                style={{
+                  boxShadow: `0 0 24px ${
+                    isLow ? 'rgba(255,64,87,0.35)' : `${activeColor}30`
+                  }, inset 0 0 18px rgba(0,0,0,0.6)`,
+                }}
               >
-                {isComplete ? '✓' : timerSeconds}
-              </span>
-              <span className="text-[11px] font-display uppercase tracking-[0.22em] text-gray-400 mt-1">
-                {isComplete ? 'HOÀN TẤT' : 'GIÂY'}
-              </span>
-            </div>
-          )}
+                <svg
+                  className="absolute inset-0 w-full h-full -rotate-90 pointer-events-none"
+                  viewBox="0 0 100 100"
+                >
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r={radius}
+                    fill="none"
+                    stroke="rgba(255,255,255,0.08)"
+                    strokeWidth="3"
+                  />
+                  <circle
+                    cx="50"
+                    cy="50"
+                    r={radius}
+                    fill="none"
+                    stroke={ringColor}
+                    strokeWidth="3.5"
+                    strokeLinecap="round"
+                    strokeDasharray={circumference}
+                    strokeDashoffset={dashOffset}
+                    className="transition-[stroke-dashoffset,stroke] duration-200 ease-linear"
+                  />
+                </svg>
+
+                <span
+                  className={`relative z-10 font-display font-bold tabular-nums leading-none ${
+                    isOverlay ? 'text-7xl' : 'text-3xl'
+                  }`}
+                >
+                  {isComplete ? '✓' : timerSeconds}
+                </span>
+                <span className="relative z-10 text-[11px] font-display uppercase tracking-[0.22em] text-gray-400 mt-1">
+                  {isComplete ? 'HOÀN TẤT' : 'GIÂY'}
+                </span>
+              </div>
+            );
+          })()}
 
           {/* Chỉ báo lượt: 11px radius + HudCorners */}
           <div
