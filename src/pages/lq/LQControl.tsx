@@ -9,7 +9,7 @@ import { useBroadcast } from '../../hooks/useBroadcast';
 import { useTimer } from '../../hooks/useTimer';
 import { useAudio } from '../../hooks/useAudio';
 import { useKeyboard } from '../../hooks/useKeyboard';
-import { getBackendHealth, saveMatchRecord } from '../../lib/api';
+import { saveMatchRecord } from '../../lib/api';
 import { LQ_3BAN_PHASES, LQ_4BAN_PHASES, LQ_DEFAULT_PHASES } from '../../data/defaults';
 import type { BPPhase } from '../../types';
 
@@ -25,14 +25,12 @@ export default function LQControl() {
   const [showSettings, setShowSettings] = useState(false);
   const [copied, setCopied] = useState(false);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
-  const [dbReady, setDbReady] = useState(false);
   const [expiredAlert, setExpiredAlert] = useState(false);
 
-  // Tải cấu hình & dữ liệu tướng từ Backend khi mở trang
+  // Tải cấu hình & dữ liệu tướng khi mở trang
   useEffect(() => {
     settings.hydrate();
     lq.hydrate();
-    getBackendHealth().then((h) => setDbReady(h.storage === 'postgres'));
   }, []);
 
   // Tách danh sách ID đã ban và đã pick để HeroGrid hiển thị đúng icon
@@ -173,7 +171,7 @@ export default function LQControl() {
   };
 
   const handleSaveMatch = async () => {
-    const res = await saveMatchRecord({
+    await saveMatchRecord({
       game: 'lq',
       tournament_name: settings.tournamentName,
       round_name: settings.roundName,
@@ -187,11 +185,7 @@ export default function LQControl() {
         picksB: lq.picksB,
       },
     });
-    setSaveNotice(
-      res.storage === 'postgres'
-        ? '✓ Đã lưu DB'
-        : '✓ Đã lưu server'
-    );
+    setSaveNotice('✓ Đã lưu trận');
     setTimeout(() => setSaveNotice(null), 2500);
   };
 
@@ -317,9 +311,8 @@ export default function LQControl() {
           <Link
             to="/matches"
             className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold"
-            title={dbReady ? 'Đã kết nối PostgreSQL' : 'Đang dùng bộ nhớ server tạm'}
           >
-            {dbReady ? '🟢' : '🟡'} Lịch sử
+            Lịch sử
           </Link>
         </div>
       </header>

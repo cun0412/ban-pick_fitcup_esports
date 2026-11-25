@@ -14,7 +14,6 @@ import type { LQHero, ValorantMap } from '../types';
  */
 export default function Matches() {
   const [matches, setMatches] = useState<SavedMatchRecord[]>([]);
-  const [storage, setStorage] = useState<'postgres' | 'memory'>('memory');
   const [loading, setLoading] = useState(true);
   const [filterGame, setFilterGame] = useState<'all' | 'lq' | 'valorant'>('all');
   const [search, setSearch] = useState('');
@@ -35,7 +34,6 @@ export default function Matches() {
     setLoading(true);
     const res = await fetchMatchRecords();
     setMatches(res.data);
-    setStorage(res.storage);
     setLoading(false);
   };
 
@@ -87,19 +85,9 @@ export default function Matches() {
             >
               ← Trang chủ
             </Link>
-            <div>
-              <h1 className="text-2xl font-semibold text-[#eef0f5]">
-                Lịch sử Ban/Pick giải đấu
-              </h1>
-              <p className="text-xs text-[#7a8296] mt-0.5">
-                Backend Storage:{' '}
-                <strong className="text-[#eef0f5]">
-                  {storage === 'postgres'
-                    ? 'PostgreSQL (Supabase Server)'
-                    : 'Server Memory (chưa gắn biến môi trường DB)'}
-                </strong>
-              </p>
-            </div>
+            <h1 className="text-2xl font-semibold text-[#eef0f5]">
+              Lịch sử Ban/Pick giải đấu
+            </h1>
           </div>
 
           <div className="flex items-center gap-2">
@@ -158,13 +146,13 @@ export default function Matches() {
         {/* Danh sách trận */}
         {loading ? (
           <div className="py-16 text-center text-sm text-[#7a8296]">
-            Đang tải dữ liệu từ server...
+            Đang tải dữ liệu...
           </div>
         ) : filtered.length === 0 ? (
           <div className="rounded-xl bg-[#11141c] border border-[rgba(238,240,245,0.08)] py-16 text-center space-y-2">
             <div className="text-sm text-[#a3a9b8]">Chưa có trận đấu nào được lưu</div>
             <p className="text-xs text-[#7a8296]">
-              Sau khi hoàn tất Ban/Pick hoặc Quay Map ở trang điều khiển, bấm nút Lưu trận để lưu lên server
+              Sau khi hoàn tất Ban/Pick hoặc Quay Map ở trang điều khiển, bấm nút Lưu trận để lưu lại
             </p>
           </div>
         ) : (

@@ -155,7 +155,7 @@ export default function LQAdmin() {
           );
           await saveHeroOverrides(items);
           applyLocalOverrides(parsed);
-          alert('Đã nhập và lưu dữ liệu lên server thành công!');
+          alert('Đã nhập và lưu dữ liệu thành công!');
         }
       } catch {
         alert('File JSON không hợp lệ.');
@@ -212,7 +212,7 @@ export default function LQAdmin() {
                 QUẢN TRỊ TƯỚNG LIÊN QUÂN ({heroes.length})
               </h1>
               <p className="text-xs text-gray-400">
-                Chưa gán vai trò: <strong className="text-white">{unassignedCount}</strong> • Lưu đồng bộ qua Backend API
+                Chưa gán vai trò: <strong className="text-white">{unassignedCount}</strong>
               </p>
             </div>
           </div>

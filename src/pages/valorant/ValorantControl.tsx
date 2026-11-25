@@ -13,7 +13,7 @@ import { useSettingsStore } from '../../stores/settingsStore';
 import { useBroadcast } from '../../hooks/useBroadcast';
 import { useAudio } from '../../hooks/useAudio';
 import { useKeyboard } from '../../hooks/useKeyboard';
-import { getBackendHealth, saveMatchRecord } from '../../lib/api';
+import { saveMatchRecord } from '../../lib/api';
 import type { BoType, MapSide, SpinStyle, TeamSide, ValorantMap, VetoPhase } from '../../types';
 
 /**
@@ -27,7 +27,6 @@ export default function ValorantControl() {
 
   const [copied, setCopied] = useState(false);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
-  const [dbReady, setDbReady] = useState(false);
   const [showMapPoolModal, setShowMapPoolModal] = useState(false);
   const [showVetoOrderModal, setShowVetoOrderModal] = useState(false);
   const [coinFlipMode, setCoinFlipMode] = useState<'team' | 'side' | null>(null);
@@ -35,11 +34,10 @@ export default function ValorantControl() {
   const [autoSpinningAll, setAutoSpinningAll] = useState(false);
   const autoSpinQueueRef = useRef<boolean>(false);
 
-  // Tải cấu hình & danh sách map từ Backend khi mở trang
+  // Tải cấu hình & danh sách map khi mở trang
   useEffect(() => {
     settings.hydrate();
     val.hydrate();
-    getBackendHealth().then((h) => setDbReady(h.storage === 'postgres'));
   }, []);
 
   const buildSyncPayload = useCallback(
@@ -201,7 +199,7 @@ export default function ValorantControl() {
   };
 
   const handleSaveMatch = async () => {
-    const res = await saveMatchRecord({
+    await saveMatchRecord({
       game: 'valorant',
       tournament_name: settings.tournamentName,
       round_name: settings.roundName,
@@ -218,11 +216,7 @@ export default function ValorantControl() {
               preSpinBans: val.preSpinBans,
             },
     });
-    setSaveNotice(
-      res.storage === 'postgres'
-        ? '✓ Đã lưu DB'
-        : '✓ Đã lưu server'
-    );
+    setSaveNotice('✓ Đã lưu trận');
     setTimeout(() => setSaveNotice(null), 2500);
   };
 
@@ -349,9 +343,8 @@ export default function ValorantControl() {
           <Link
             to="/matches"
             className="px-3 py-1.5 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold"
-            title={dbReady ? 'Đã kết nối PostgreSQL' : 'Đang dùng bộ nhớ server tạm'}
           >
-            {dbReady ? '🟢' : '🟡'} Lịch sử
+            Lịch sử
           </Link>
         </div>
       </header>
@@ -959,7 +952,7 @@ export default function ValorantControl() {
               </button>
             </div>
             <p className="text-xs text-gray-400">
-              Bật hoặc tắt các map dùng trong giải đấu (lưu trực tiếp qua Backend API).
+              Bật hoặc tắt các map dùng trong giải đấu.
             </p>
             <div className="grid grid-cols-2 sm:grid-cols-3 gap-2.5 max-h-96 overflow-y-auto">
               {val.maps.map((m) => (
