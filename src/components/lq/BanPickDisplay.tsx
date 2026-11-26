@@ -68,7 +68,7 @@ export default function BanPickDisplay({
     const hudTeamColor = isLeft ? '#3185FF' : '#FF343F';
 
     return (
-      <div className="flex-1 flex flex-col gap-3">
+      <div className="flex-1 min-w-0 flex flex-col gap-3">
         {/* Header tên đội + logo: 7px radius, Team A xanh cạnh trái / Team B đỏ cạnh phải */}
         <div
           className={`flex items-center gap-3.5 px-4 py-2.5 rounded-[7px] bg-[#0b1018]/92 transition-all relative ${
@@ -199,7 +199,7 @@ export default function BanPickDisplay({
               <div
                 key={`pick-${side}-${idx}`}
                 className={`relative rounded-[9px] overflow-hidden transition-all flex items-center ${
-                  isOverlay ? 'h-[134px]' : 'h-16'
+                  isOverlay ? 'h-[126px]' : 'h-16'
                 } ${isLeft ? 'flex-row' : 'flex-row-reverse'} ${
                   isActive
                     ? 'hud-neon-gold hud-subtle-pulse bg-[#0b1018]/95'
@@ -213,7 +213,7 @@ export default function BanPickDisplay({
                 {/* Ảnh tướng */}
                 <div
                   className={`h-full aspect-square shrink-0 overflow-hidden bg-slate-900/90 relative ${
-                    isOverlay ? 'w-[134px]' : 'w-16'
+                    isOverlay ? 'w-[126px]' : 'w-16'
                   }`}
                 >
                   {hero ? (
@@ -325,7 +325,7 @@ export default function BanPickDisplay({
     <div className="w-full flex flex-col gap-4">
       {/* Header giải đấu (11px radius + viền neon mảnh) */}
       {isOverlay && (
-        <div className="flex items-center justify-between px-10 pt-6 pb-1">
+        <div className="flex items-center justify-between px-10 pt-5 pb-1">
           <div className="px-6 py-2.5 rounded-[10px] bg-[#0b1018]/92 hud-neon-gold relative">
             <HudCorners color="#FFB800" size={9} offset={4} />
             <span className="font-display font-black text-2xl tracking-wider text-white uppercase">
@@ -345,7 +345,7 @@ export default function BanPickDisplay({
       <div
         className={`flex items-stretch ${
           isOverlay
-            ? 'flex-row gap-5 px-10 pb-8'
+            ? 'flex-row gap-5 px-10 pb-6'
             : 'flex-col md:flex-row gap-4 md:gap-5'
         }`}
       >

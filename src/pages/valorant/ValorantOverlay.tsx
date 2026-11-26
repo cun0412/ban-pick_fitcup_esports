@@ -232,7 +232,7 @@ export default function ValorantOverlay() {
         {/* Header: Team A (xanh #3185FF) — Giải đấu — Team B (đỏ #FF343F) */}
         <header className="relative z-10 flex items-center justify-between gap-6">
           {/* Team A: 6-8px radius + viền xanh & ánh sáng cạnh trái */}
-          <div className="flex items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-blue min-w-[440px] relative">
+          <div className="flex items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-blue flex-1 max-w-[520px] min-w-0 relative">
             <div className="w-16 h-16 rounded-[6px] bg-black/60 border border-[#3185FF]/45 flex items-center justify-center overflow-hidden shrink-0">
               {state.teamA.logo ? (
                 <img src={state.teamA.logo} alt="" className="w-full h-full object-contain p-1.5" />
@@ -253,7 +253,7 @@ export default function ValorantOverlay() {
           </div>
 
           {/* Giữa: Thông tin giải đấu */}
-          <div className="text-center px-10 py-3 rounded-[10px] bg-[#0b1018]/94 hud-neon-red relative">
+          <div className="text-center px-10 py-3 rounded-[10px] bg-[#0b1018]/94 hud-neon-red relative shrink-0 max-w-[600px]">
             <HudCorners color="#FF4057" size={10} offset={5} />
             <div className="font-display font-black text-3xl tracking-widest text-white uppercase">
               {state.tournamentName}
@@ -268,7 +268,7 @@ export default function ValorantOverlay() {
           </div>
 
           {/* Team B: 6-8px radius + viền đỏ & ánh sáng cạnh phải */}
-          <div className="flex flex-row-reverse items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-red min-w-[440px] text-right relative">
+          <div className="flex flex-row-reverse items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-red flex-1 max-w-[520px] min-w-0 text-right relative">
             <div className="w-16 h-16 rounded-[6px] bg-black/60 border border-[#FF343F]/45 flex items-center justify-center overflow-hidden shrink-0">
               {state.teamB.logo ? (
                 <img src={state.teamB.logo} alt="" className="w-full h-full object-contain p-1.5" />

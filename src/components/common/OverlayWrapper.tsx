@@ -10,7 +10,7 @@ interface OverlayWrapperProps {
 
 /**
  * Wrapper cho các trang Overlay (1920x1080)
- * Tự động scale theo kích thước cửa sổ OBS/trình duyệt và hỗ trợ chọn nền qua ?bg=
+ * Tự động scale và căn giữa chuẩn 16:9 theo kích thước cửa sổ OBS/trình duyệt, không bị lệch trái
  */
 export default function OverlayWrapper({
   children,
@@ -19,7 +19,11 @@ export default function OverlayWrapper({
 }: OverlayWrapperProps) {
   const [searchParams] = useSearchParams();
   const storeBg = useSettingsStore((s) => s.overlayBg);
-  const [scale, setScale] = useState(1);
+  const [scale, setScale] = useState(() =>
+    typeof window !== 'undefined'
+      ? Math.min(window.innerWidth / 1920, window.innerHeight / 1080)
+      : 1
+  );
 
   const bgParam = searchParams.get('bg') as 'transparent' | 'chroma' | 'dark' | null;
   const bgMode = bgParam || bgOverride || storeBg || 'dark';
@@ -42,7 +46,7 @@ export default function OverlayWrapper({
     } else if (bgMode === 'chroma') {
       document.body.style.background = '#00ff00';
     } else {
-      document.body.style.background = '#0a0e1a';
+      document.body.style.background = '#090d14';
     }
     return () => {
       document.body.className = prevClass;
@@ -58,15 +62,25 @@ export default function OverlayWrapper({
       : 'overlay-dark';
 
   return (
-    <div className={`w-screen h-screen overflow-hidden relative ${bgClass}`}>
+    <div
+      className={`w-screen h-screen overflow-hidden flex items-center justify-center ${bgClass}`}
+    >
       <div
-        className={`overlay-container relative overflow-hidden ${className}`}
+        className="relative overflow-hidden shrink-0"
         style={{
-          transform: `scale(${scale})`,
-          transformOrigin: 'top left',
+          width: `${1920 * scale}px`,
+          height: `${1080 * scale}px`,
         }}
       >
-        {children}
+        <div
+          className={`overlay-container relative overflow-hidden ${className}`}
+          style={{
+            transform: `scale(${scale})`,
+            transformOrigin: 'top left',
+          }}
+        >
+          {children}
+        </div>
       </div>
     </div>
   );

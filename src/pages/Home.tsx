@@ -137,7 +137,7 @@ export default function Home() {
                   </div>
                   <div className="py-2.5 flex items-center justify-between gap-4">
                     <dt className="text-[#7a8296]">Kho tướng</dt>
-                    <dd className="text-[#eef0f5] tabular-nums">130 tướng · Lọc vai trò &amp; tìm không dấu</dd>
+                    <dd className="text-[#eef0f5] tabular-nums">130 tướng - Lọc vai trò &amp; tìm không dấu</dd>
                   </div>
                 </dl>
               </div>
@@ -201,7 +201,7 @@ export default function Home() {
                 <dl className="divide-y divide-[rgba(238,240,245,0.06)] border-y border-[rgba(238,240,245,0.06)] text-xs">
                   <div className="py-2.5 flex items-center justify-between gap-4">
                     <dt className="text-[#7a8296]">Thể thức</dt>
-                    <dd className="text-[#eef0f5] tabular-nums">Bo1 · Bo3 · Bo5 · Ban trước khi quay</dd>
+                    <dd className="text-[#eef0f5] tabular-nums">Bo1/Bo3/Bo5 - Ban trước khi quay</dd>
                   </div>
                   <div className="py-2.5 flex items-center justify-between gap-4">
                     <dt className="text-[#7a8296]">Chế độ vận hành</dt>
