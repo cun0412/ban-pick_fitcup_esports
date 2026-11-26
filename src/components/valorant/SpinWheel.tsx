@@ -41,18 +41,21 @@ export default function SpinWheel({
   const [rotation, setRotation] = useState(0);
   const [fallbackSplashIds, setFallbackSplashIds] = useState<Record<string, boolean>>({});
   const rotRef = useRef(0);
+  const mapsRef = useRef(maps);
   const onTickRef = useRef(onTick);
   const onFinishRef = useRef(onFinish);
+  mapsRef.current = maps;
   onTickRef.current = onTick;
   onFinishRef.current = onFinish;
 
   useEffect(() => {
-    if (!isSpinning || !targetMapId || maps.length === 0) return;
+    const currentMaps = mapsRef.current;
+    if (!isSpinning || !targetMapId || currentMaps.length === 0) return;
 
-    const targetIndex = maps.findIndex((m) => m.id === targetMapId);
+    const targetIndex = currentMaps.findIndex((m) => m.id === targetMapId);
     if (targetIndex < 0) return;
 
-    const sliceAngle = 360 / maps.length;
+    const sliceAngle = 360 / currentMaps.length;
     // Tâm của múi targetIndex tính từ góc 0 ở đỉnh (12 giờ)
     const centerAngle = targetIndex * sliceAngle + sliceAngle / 2;
     const desiredMod = (360 - centerAngle + 360) % 360;
@@ -94,7 +97,7 @@ export default function SpinWheel({
 
     rafId = requestAnimationFrame(animate);
     return () => cancelAnimationFrame(rafId);
-  }, [isSpinning, targetMapId, triggerId, duration, maps]);
+  }, [isSpinning, targetMapId, triggerId, duration]);
 
   const radius = size / 2;
   const outerRadius = radius - 8;

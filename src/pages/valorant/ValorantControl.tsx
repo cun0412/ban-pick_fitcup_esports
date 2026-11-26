@@ -98,6 +98,19 @@ export default function ValorantControl() {
   const [activeSpinPool, setActiveSpinPool] = useState<ValorantMap[]>(spinPoolMaps);
   const activeSpinMetaRef = useRef<{ mapId: string; mapNumber: number; isRespin: boolean } | null>(null);
 
+  // Giữ nguyên vòng quay vừa trúng để kim dừng đúng map kết quả, chỉ cập nhật lại pool khi quay lượt tiếp hoặc Undo/Reset
+  useEffect(() => {
+    if (!val.lastWinnerMapId) {
+      setWinnerBannerMap(null);
+    }
+  }, [val.lastWinnerMapId]);
+
+  const wheelDisplayMaps =
+    (val.isSpinning || (Boolean(val.lastWinnerMapId) && Boolean(winnerBannerMap))) &&
+    activeSpinPool.length > 0
+      ? activeSpinPool
+      : spinPoolMaps;
+
   const triggerSingleSpin = useCallback(
     (isRespin = false) => {
       if (val.isSpinning) return;
@@ -777,7 +790,7 @@ export default function ValorantControl() {
                 <div className="py-2 w-full flex justify-center">
                   {val.spinConfig.style === 'wheel' && (
                     <SpinWheel
-                      maps={val.isSpinning ? activeSpinPool : spinPoolMaps}
+                      maps={wheelDisplayMaps}
                       targetMapId={val.currentSpinTargetId}
                       isSpinning={val.isSpinning}
                       duration={val.spinConfig.duration}
@@ -789,7 +802,7 @@ export default function ValorantControl() {
                   )}
                   {val.spinConfig.style === 'slot' && (
                     <SlotMachine
-                      maps={val.isSpinning ? activeSpinPool : spinPoolMaps}
+                      maps={wheelDisplayMaps}
                       targetMapId={val.currentSpinTargetId}
                       isSpinning={val.isSpinning}
                       duration={val.spinConfig.duration}
@@ -802,7 +815,7 @@ export default function ValorantControl() {
                   )}
                   {val.spinConfig.style === 'card' && (
                     <CardFlip
-                      maps={val.isSpinning ? activeSpinPool : spinPoolMaps}
+                      maps={wheelDisplayMaps}
                       targetMapId={val.currentSpinTargetId}
                       isSpinning={val.isSpinning}
                       duration={val.spinConfig.duration}
