@@ -856,31 +856,41 @@ export default function ValorantControl() {
                   )}
                 </div>
 
-                {/* Banner map trúng lớn */}
-                <AnimatePresence>
-                  {winnerBannerMap && !val.isSpinning && (
-                    <motion.div
-                      initial={{ opacity: 0, scale: 0.7 }}
-                      animate={{ opacity: 1, scale: 1 }}
-                      exit={{ opacity: 0, scale: 0.85 }}
-                      className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff4655]/30 via-amber-500/20 to-[#ff4655]/30 border border-amber-400 shadow-[0_0_30px_rgba(251,191,36,0.4)]"
-                    >
-                      <img
-                        src={winnerBannerMap.localSplash || winnerBannerMap.splash}
-                        alt={winnerBannerMap.name}
-                        className="w-24 h-14 object-cover rounded-lg border border-white/20"
-                      />
-                      <div>
-                        <div className="text-[11px] uppercase tracking-widest text-amber-300 font-bold">
-                          🎉 KẾT QUẢ VỪA QUAY
+                {/* Banner map trúng lớn (giữ cố định chiều cao để lúc dừng không đẩy giật bố cục vòng quay) */}
+                <div className="min-h-[84px] flex items-center justify-center w-full">
+                  <AnimatePresence mode="wait">
+                    {winnerBannerMap && !val.isSpinning ? (
+                      <motion.div
+                        key={winnerBannerMap.id}
+                        initial={{ opacity: 0, y: 4 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        exit={{ opacity: 0 }}
+                        transition={{ duration: 0.22 }}
+                        className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff4655]/30 via-amber-500/20 to-[#ff4655]/30 border border-amber-400 shadow-[0_0_30px_rgba(251,191,36,0.4)]"
+                      >
+                        <img
+                          src={winnerBannerMap.localSplash || winnerBannerMap.splash}
+                          alt={winnerBannerMap.name}
+                          className="w-24 h-14 object-cover rounded-lg border border-white/20"
+                        />
+                        <div>
+                          <div className="text-[11px] uppercase tracking-widest text-amber-300 font-bold">
+                            🎉 KẾT QUẢ VỪA QUAY
+                          </div>
+                          <div className="text-2xl font-display font-black uppercase text-white">
+                            {winnerBannerMap.name}
+                          </div>
                         </div>
-                        <div className="text-2xl font-display font-black uppercase text-white">
-                          {winnerBannerMap.name}
-                        </div>
+                      </motion.div>
+                    ) : (
+                      <div className="text-xs text-gray-500 font-medium">
+                        {val.isSpinning
+                          ? 'Đang quay chọn bản đồ...'
+                          : 'Bấm Quay Map hoặc phím Space để bắt đầu'}
                       </div>
-                    </motion.div>
-                  )}
-                </AnimatePresence>
+                    )}
+                  </AnimatePresence>
+                </div>
               </div>
 
               {/* Kết quả các map đã quay + Gán bên Attack/Defense */}
