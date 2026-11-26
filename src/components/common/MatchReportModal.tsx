@@ -38,6 +38,33 @@ export default function MatchReportModal({
     setForm((prev) => (prev ? { ...prev, [key]: val } : prev));
   };
 
+  const updatePlayerRow = (
+    side: 'A' | 'B',
+    idx: number,
+    patch: { fullName?: string; inGameTag?: string }
+  ) => {
+    const key = side === 'A' ? 'playersA' : 'playersB';
+    setForm((prev) => {
+      if (!prev) return prev;
+      const list = prev[key].map((p, i) => (i === idx ? { ...p, ...patch } : p));
+      return { ...prev, [key]: list };
+    });
+  };
+
+  const addPlayerRow = (side: 'A' | 'B') => {
+    const key = side === 'A' ? 'playersA' : 'playersB';
+    setForm((prev) =>
+      prev ? { ...prev, [key]: [...prev[key], { fullName: '', inGameTag: '' }] } : prev
+    );
+  };
+
+  const removePlayerRow = (side: 'A' | 'B', idx: number) => {
+    const key = side === 'A' ? 'playersA' : 'playersB';
+    setForm((prev) =>
+      prev ? { ...prev, [key]: prev[key].filter((_, i) => i !== idx) } : prev
+    );
+  };
+
   const updateGameRow = (
     idx: number,
     patch: Partial<MatchReportData['games'][number]>
@@ -340,6 +367,57 @@ export default function MatchReportModal({
                       Thiết bị đạt chuẩn
                     </label>
                   </div>
+
+                  {/* Danh sách tuyển thủ: Họ tên & Tên tag game */}
+                  <div className="pt-2 border-t border-white/10 space-y-1.5">
+                    <div className="flex items-center justify-between">
+                      <span className="text-[11px] font-semibold text-gray-300">
+                        Thông tin tuyển thủ (Họ tên · Tag game)
+                      </span>
+                      <button
+                        type="button"
+                        onClick={() => addPlayerRow(t.side)}
+                        className="px-2 py-0.5 rounded bg-white/10 hover:bg-white/20 text-[10px] text-amber-300 font-semibold"
+                      >
+                        + Thêm dự bị
+                      </button>
+                    </div>
+                    {(t.side === 'A' ? form.playersA : form.playersB).map((p, idx) => (
+                      <div key={idx} className="flex items-center gap-1.5">
+                        <span className="w-5 text-[10px] text-gray-400 text-center shrink-0">
+                          {idx + 1}.
+                        </span>
+                        <input
+                          type="text"
+                          value={p.fullName}
+                          onChange={(e) =>
+                            updatePlayerRow(t.side, idx, { fullName: e.target.value })
+                          }
+                          placeholder={idx < 5 ? 'Họ và tên' : 'Họ tên (Dự bị)'}
+                          className={inputCls}
+                        />
+                        <input
+                          type="text"
+                          value={p.inGameTag}
+                          onChange={(e) =>
+                            updatePlayerRow(t.side, idx, { inGameTag: e.target.value })
+                          }
+                          placeholder="Tag game"
+                          className={inputCls}
+                        />
+                        {idx >= 5 && (
+                          <button
+                            type="button"
+                            onClick={() => removePlayerRow(t.side, idx)}
+                            className="px-1.5 py-1 text-red-400 hover:text-red-300 text-[11px]"
+                            title="Xóa dòng"
+                          >
+                            ✕
+                          </button>
+                        )}
+                      </div>
+                    ))}
+                  </div>
                 </div>
               ))}
             </div>
@@ -614,6 +692,35 @@ export default function MatchReportModal({
                   onChange={(e) => update('complaintDetails', e.target.value)}
                   placeholder={form.hasComplaint ? 'Nhập nội dung khiếu nại...' : 'Không có'}
                   className={`${inputCls} disabled:opacity-40`}
+                />
+              </div>
+            </div>
+          </section>
+
+          {/* VII. Đại diện ký xác nhận */}
+          <section className="space-y-3">
+            <h3 className="font-display font-bold text-sm text-blue-300 uppercase tracking-wider border-b border-white/10 pb-1">
+              VII. Trọng tài &amp; Giám sát BTC (ghi rõ họ tên dưới phần ký)
+            </h3>
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+              <div>
+                <label className="block text-gray-400 mb-1">Họ tên Trọng tài</label>
+                <input
+                  type="text"
+                  value={form.refereeName}
+                  onChange={(e) => update('refereeName', e.target.value)}
+                  placeholder="Nhập họ tên trọng tài..."
+                  className={inputCls}
+                />
+              </div>
+              <div>
+                <label className="block text-gray-400 mb-1">Họ tên Giám sát BTC</label>
+                <input
+                  type="text"
+                  value={form.supervisorName}
+                  onChange={(e) => update('supervisorName', e.target.value)}
+                  placeholder="Nhập họ tên giám sát BTC..."
+                  className={inputCls}
                 />
               </div>
             </div>

@@ -28,6 +28,11 @@ export interface ReportGameRow {
   duration: string;
 }
 
+export interface ReportPlayerInfo {
+  fullName: string;
+  inGameTag: string;
+}
+
 export interface MatchReportData {
   // Header
   reportNumber: string;
@@ -64,6 +69,8 @@ export interface MatchReportData {
   verifiedIdB: boolean;
   deviceApprovedA: boolean;
   deviceApprovedB: boolean;
+  playersA: ReportPlayerInfo[];
+  playersB: ReportPlayerInfo[];
 
   // III. Ban/Pick
   firstBanPickTeam: '' | TeamSide;
@@ -89,6 +96,10 @@ export interface MatchReportData {
   technicalIssues: string;
   hasComplaint: boolean;
   complaintDetails: string;
+
+  // Đại diện ký xác nhận
+  refereeName: string;
+  supervisorName: string;
 }
 
 function detectRoundFromName(roundName: string): {
@@ -160,6 +171,8 @@ function makeBaseReport(
     verifiedIdB: true,
     deviceApprovedA: true,
     deviceApprovedB: true,
+    playersA: Array.from({ length: 5 }, () => ({ fullName: '', inGameTag: '' })),
+    playersB: Array.from({ length: 5 }, () => ({ fullName: '', inGameTag: '' })),
     firstBanPickTeam: '',
     bansAText: '',
     bansBText: '',
@@ -181,6 +194,8 @@ function makeBaseReport(
     technicalIssues: '',
     hasComplaint: false,
     complaintDetails: '',
+    refereeName: '',
+    supervisorName: '',
   };
 }
 
@@ -226,7 +241,15 @@ export function buildLQReportInitial(params: {
 
   // Ghi sẵn phe xanh - đỏ cho ván 1
   base.games[0].mapOrSides = `Xanh: ${base.teamAName} / Đỏ: ${base.teamBName}`;
-  // Gợi ý đội trưởng từ slot người chơi đầu tiên nếu có nhập
+  // Gợi ý đội trưởng & tag game từ slot người chơi nếu đã nhập trên bảng Ban/Pick
+  base.playersA = Array.from({ length: 5 }, (_, idx) => ({
+    fullName: '',
+    inGameTag: params.picksA[idx]?.playerName?.trim() || '',
+  }));
+  base.playersB = Array.from({ length: 5 }, (_, idx) => ({
+    fullName: '',
+    inGameTag: params.picksB[idx]?.playerName?.trim() || '',
+  }));
   const firstPlayerA = params.picksA.find((p) => p.playerName?.trim())?.playerName;
   const firstPlayerB = params.picksB.find((p) => p.playerName?.trim())?.playerName;
   if (firstPlayerA) base.captainA = firstPlayerA;
@@ -633,6 +656,32 @@ export function buildMatchReportDocumentHtml(data: MatchReportData): string {
       </tr>
     </table>
 
+    <!-- Danh sách tuyển thủ tham gia -->
+    <div style="font-weight: bold; font-size: 11pt; margin: 7pt 0 3pt;">Danh sách tuyển thủ tham gia:</div>
+    <table class="grid">
+      <tr>
+        <th style="width: 6%;">STT</th>
+        <th style="width: 26%;">Họ và tên (${esc(data.teamAName)})</th>
+        <th style="width: 21%;">Tag game (Đội A)</th>
+        <th style="width: 26%;">Họ và tên (${esc(data.teamBName)})</th>
+        <th style="width: 21%;">Tag game (Đội B)</th>
+      </tr>
+      ${Array.from(
+        { length: Math.max(5, data.playersA.length, data.playersB.length) },
+        (_, i) => {
+          const pA = data.playersA[i] || { fullName: '', inGameTag: '' };
+          const pB = data.playersB[i] || { fullName: '', inGameTag: '' };
+          return `<tr>
+        <td class="center">${i + 1}</td>
+        <td>${esc(pA.fullName)}</td>
+        <td>${esc(pA.inGameTag)}</td>
+        <td>${esc(pB.fullName)}</td>
+        <td>${esc(pB.inGameTag)}</td>
+      </tr>`;
+        }
+      ).join('\n      ')}
+    </table>
+
     <!-- III. BAN/PICK -->
     <div class="section-title" style="margin-bottom: 1pt;">III. BAN/PICK</div>
     <div class="note-italic">(Valorant: ghi map; Liên Quân Mobile: ghi tướng)</div>
@@ -736,23 +785,25 @@ export function buildMatchReportDocumentHtml(data: MatchReportData): string {
           <div class="bold">ĐỘI TRƯỞNG ĐỘI A</div>
           <div style="font-style: italic;">(Ký, ghi rõ họ tên)</div>
           <div class="sign-space"></div>
-          ${data.captainA ? `<div>${esc(data.captainA)}</div>` : ''}
+          ${data.captainA ? `<div class="bold">${esc(data.captainA)}</div>` : ''}
         </td>
         <td>
           <div class="bold">ĐỘI TRƯỞNG ĐỘI B</div>
           <div style="font-style: italic;">(Ký, ghi rõ họ tên)</div>
           <div class="sign-space"></div>
-          ${data.captainB ? `<div>${esc(data.captainB)}</div>` : ''}
+          ${data.captainB ? `<div class="bold">${esc(data.captainB)}</div>` : ''}
         </td>
         <td>
           <div class="bold">TRỌNG TÀI</div>
           <div style="font-style: italic;">(Ký, ghi rõ họ tên)</div>
           <div class="sign-space"></div>
+          ${data.refereeName ? `<div class="bold">${esc(data.refereeName)}</div>` : ''}
         </td>
         <td>
           <div class="bold">GIÁM SÁT BTC</div>
           <div style="font-style: italic;">(Ký, ghi rõ họ tên)</div>
           <div class="sign-space"></div>
+          ${data.supervisorName ? `<div class="bold">${esc(data.supervisorName)}</div>` : ''}
         </td>
       </tr>
     </table>
