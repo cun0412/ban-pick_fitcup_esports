@@ -121,12 +121,13 @@ export default function LQControl() {
     });
   }, [subscribe, send, buildSyncPayload]);
 
-  // Khi chuyển lượt thì reset đồng hồ
+  // Khi chuyển lượt hoặc chỉnh số giây thì reset đồng hồ về đúng lq.timerMax
   useEffect(() => {
     setExpiredAlert(false);
-    timer.reset(lq.timerMax);
     if (settings.timerEnabled && !lq.isComplete && lq.history.length > 0) {
-      timer.start();
+      timer.start(lq.timerMax);
+    } else {
+      timer.reset(lq.timerMax);
     }
   }, [lq.currentPhaseIndex, lq.timerMax, lq.isComplete]);
 
@@ -403,11 +404,11 @@ export default function LQControl() {
                 ) : null}
               </div>
 
-              {/* Đồng hồ + nút Start/Pause */}
+              {/* Đồng hồ + nút Start/Pause/Reset */}
               {settings.timerEnabled && (
-                <div className="flex items-center gap-2">
+                <div className="flex items-center gap-1.5">
                   <span
-                    className={`font-display font-black text-2xl w-10 text-center ${
+                    className={`font-display font-black text-2xl w-11 text-center tabular-nums ${
                       timer.seconds <= 5 ? 'text-red-400 animate-pulse' : 'text-white'
                     }`}
                   >
@@ -420,9 +421,54 @@ export default function LQControl() {
                   >
                     {timer.running ? '⏸ Tạm dừng' : '▶ Chạy'}
                   </button>
+                  <button
+                    type="button"
+                    onClick={() => timer.reset(lq.timerMax)}
+                    title="Đặt lại đồng hồ về số giây mặc định"
+                    className="px-2 py-1 rounded-lg bg-white/10 hover:bg-white/20 text-xs font-semibold"
+                  >
+                    ↺
+                  </button>
                 </div>
               )}
             </div>
+
+            {/* Mục chỉnh nhanh số giây mỗi lượt ngay trên màn hình điều khiển */}
+            {settings.timerEnabled && (
+              <div className="flex flex-wrap items-center justify-between gap-2 px-3 py-1.5 rounded-xl bg-black/30 border border-white/10 text-xs">
+                <div className="flex items-center gap-2">
+                  <span className="text-gray-400">Giây/lượt:</span>
+                  <input
+                    type="number"
+                    min={5}
+                    max={300}
+                    value={lq.timerMax}
+                    onChange={(e) => {
+                      const v = Math.max(5, Math.min(300, Number(e.target.value) || 5));
+                      lq.setTimerMax(v);
+                    }}
+                    className="w-16 bg-black/50 border border-white/15 rounded-lg px-2 py-1 text-center font-bold text-white tabular-nums focus:outline-none focus:border-amber-400"
+                  />
+                  <span className="text-gray-400">s</span>
+                </div>
+                <div className="flex items-center gap-1">
+                  {[20, 30, 45, 60].map((sec) => (
+                    <button
+                      key={sec}
+                      type="button"
+                      onClick={() => lq.setTimerMax(sec)}
+                      className={`px-2 py-0.5 rounded text-[11px] font-semibold transition ${
+                        lq.timerMax === sec
+                          ? 'bg-amber-500 text-black'
+                          : 'bg-white/10 text-gray-300 hover:bg-white/20'
+                      }`}
+                    >
+                      {sec}s
+                    </button>
+                  ))}
+                </div>
+              </div>
+            )}
 
             {expiredAlert && (
               <div className="px-3 py-1.5 rounded-lg bg-red-500/20 border border-red-500/50 text-red-300 text-xs font-semibold text-center animate-pulse">

@@ -16,21 +16,31 @@ export function useTimer(maxSeconds: number, onExpire?: () => void) {
   const expireCbRef = useRef(onExpire);
   expireCbRef.current = onExpire;
 
-  const start = useCallback(() => {
-    const base = secondsRef.current > 0 ? secondsRef.current : maxSeconds;
-    const dl = Date.now() + base * 1000;
-    deadlineRef.current = dl;
-    setDeadline(dl);
-    setSeconds(base);
-    setPausedSeconds(base);
-    setRunning(true);
-  }, [maxSeconds]);
+  const start = useCallback(
+    (overrideSeconds?: number) => {
+      const base =
+        overrideSeconds !== undefined
+          ? overrideSeconds
+          : secondsRef.current > 0
+          ? secondsRef.current
+          : maxSeconds;
+      const dl = Date.now() + base * 1000;
+      deadlineRef.current = dl;
+      secondsRef.current = base;
+      setDeadline(dl);
+      setSeconds(base);
+      setPausedSeconds(base);
+      setRunning(true);
+    },
+    [maxSeconds]
+  );
 
   const pause = useCallback(() => {
     const remain = deadlineRef.current
       ? Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000))
       : secondsRef.current;
     deadlineRef.current = null;
+    secondsRef.current = remain;
     setDeadline(null);
     setRunning(false);
     setSeconds(remain);
@@ -41,6 +51,7 @@ export function useTimer(maxSeconds: number, onExpire?: () => void) {
     (newMax?: number) => {
       const val = newMax ?? maxSeconds;
       deadlineRef.current = null;
+      secondsRef.current = val;
       setDeadline(null);
       setRunning(false);
       setSeconds(val);
@@ -55,6 +66,7 @@ export function useTimer(maxSeconds: number, onExpire?: () => void) {
     const tick = () => {
       if (!deadlineRef.current) return;
       const remain = Math.max(0, Math.ceil((deadlineRef.current - Date.now()) / 1000));
+      secondsRef.current = remain;
       setSeconds(remain);
       if (remain <= 0) {
         deadlineRef.current = null;
