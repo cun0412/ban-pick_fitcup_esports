@@ -51,6 +51,9 @@ interface PersistedLQState {
   bansB: BPSlot[];
   picksA: BPSlot[];
   picksB: BPSlot[];
+  scoreA: number;
+  scoreB: number;
+  boLabel: string;
   timerMax: number;
   timerAutoSkip: boolean;
   isComplete: boolean;
@@ -73,6 +76,9 @@ function extractPersisted(s: LQStore): PersistedLQState {
     bansB: s.bansB,
     picksA: s.picksA,
     picksB: s.picksB,
+    scoreA: s.scoreA,
+    scoreB: s.scoreB,
+    boLabel: s.boLabel,
     timerMax: s.timerMax,
     timerAutoSkip: s.timerAutoSkip,
     isComplete: s.isComplete,
@@ -95,6 +101,9 @@ export interface LQStore extends PersistedLQState {
   setPhases: (phases: BPPhase[]) => void;
   setTimerMax: (seconds: number) => void;
   setTimerAutoSkip: (v: boolean) => void;
+  setScoreA: (score: number) => void;
+  setScoreB: (score: number) => void;
+  setBoLabel: (bo: string) => void;
   setPlayerName: (team: TeamSide, index: number, name: string) => void;
   swapSidesSlots: () => void;
   getCurrentPhase: () => BPPhase | null;
@@ -109,6 +118,9 @@ export const useLQStore = create<LQStore>((set, get) => ({
   bansB: createEmptySlots(LQ_DEFAULT_PHASES, 'ban', 'B'),
   picksA: createEmptySlots(LQ_DEFAULT_PHASES, 'pick', 'A'),
   picksB: createEmptySlots(LQ_DEFAULT_PHASES, 'pick', 'B'),
+  scoreA: 0,
+  scoreB: 0,
+  boLabel: 'BO1',
   timerMax: 30,
   timerAutoSkip: false,
   isComplete: false,
@@ -137,6 +149,9 @@ export const useLQStore = create<LQStore>((set, get) => ({
               bansB: saved.bansB ?? createEmptySlots(phases, 'ban', 'B'),
               picksA: saved.picksA ?? createEmptySlots(phases, 'pick', 'A'),
               picksB: saved.picksB ?? createEmptySlots(phases, 'pick', 'B'),
+              scoreA: saved.scoreA ?? 0,
+              scoreB: saved.scoreB ?? 0,
+              boLabel: saved.boLabel ?? 'BO1',
               timerMax: saved.timerMax ?? 30,
               timerAutoSkip: saved.timerAutoSkip ?? false,
               isComplete: saved.isComplete ?? false,
@@ -388,6 +403,27 @@ export const useLQStore = create<LQStore>((set, get) => ({
       return updated;
     }),
 
+  setScoreA: (score) =>
+    set((prev) => {
+      const updated = { ...prev, scoreA: Math.max(0, Math.min(99, score)) };
+      persistState(extractPersisted(updated));
+      return updated;
+    }),
+
+  setScoreB: (score) =>
+    set((prev) => {
+      const updated = { ...prev, scoreB: Math.max(0, Math.min(99, score)) };
+      persistState(extractPersisted(updated));
+      return updated;
+    }),
+
+  setBoLabel: (bo) =>
+    set((prev) => {
+      const updated = { ...prev, boLabel: bo };
+      persistState(extractPersisted(updated));
+      return updated;
+    }),
+
   setPlayerName: (team, index, name) =>
     set((prev) => {
       const nextPicksA = prev.picksA.map((s, i) =>
@@ -418,6 +454,8 @@ export const useLQStore = create<LQStore>((set, get) => ({
         bansB: prev.bansA,
         picksA: prev.picksB,
         picksB: prev.picksA,
+        scoreA: prev.scoreB,
+        scoreB: prev.scoreA,
         history: nextHistory,
       };
       persistState(extractPersisted(updated));

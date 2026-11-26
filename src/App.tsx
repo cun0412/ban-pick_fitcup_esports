@@ -4,6 +4,7 @@ import Home from './pages/Home';
 
 const LQControl = lazy(() => import('./pages/lq/LQControl'));
 const LQOverlay = lazy(() => import('./pages/lq/LQOverlay'));
+const LQLivestreamOverlay = lazy(() => import('./pages/lq/LQLivestreamOverlay'));
 const LQAdmin = lazy(() => import('./pages/lq/LQAdmin'));
 const ValorantControl = lazy(() => import('./pages/valorant/ValorantControl'));
 const ValorantOverlay = lazy(() => import('./pages/valorant/ValorantOverlay'));
@@ -25,6 +26,7 @@ export default function App() {
           <Route path="/" element={<Home />} />
           <Route path="/lq/control" element={<LQControl />} />
           <Route path="/lq/overlay" element={<LQOverlay />} />
+          <Route path="/lq/overlay/stream" element={<LQLivestreamOverlay />} />
           <Route path="/lq/admin" element={<LQAdmin />} />
           <Route path="/valorant/control" element={<ValorantControl />} />
           <Route path="/valorant/overlay" element={<ValorantOverlay />} />

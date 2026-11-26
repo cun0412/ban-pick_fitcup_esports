@@ -20,68 +20,110 @@
   border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
-/* ===== Broadcast Esports HUD Shadows (đa lớp mềm, không LED dày) ===== */
+/* ===== Broadcast Esports HUD — FIT CUP S3 Identity ===== */
 .hud-panel {
-  background: rgba(11, 16, 25, 0.9);
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+  background: linear-gradient(180deg, rgba(18, 14, 20, 0.94) 0%, rgba(10, 8, 12, 0.96) 100%);
+  border: 1px solid rgba(255, 255, 255, 0.11);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 255, 255, 0.06),
+    0 12px 28px rgba(0, 0, 0, 0.58);
 }
 
 .hud-neon-red {
-  border: 1px solid rgba(255, 64, 87, 0.78);
+  border: 1px solid rgba(255, 64, 87, 0.85);
   box-shadow:
-    0 0 0 1px rgba(255, 64, 87, 0.16),
-    0 0 18px rgba(255, 64, 87, 0.22),
-    0 0 42px rgba(255, 64, 87, 0.09),
-    inset 0 0 18px rgba(255, 64, 87, 0.08);
+    inset 0 1px 0 rgba(255, 130, 110, 0.16),
+    0 0 0 1px rgba(255, 64, 87, 0.2),
+    0 0 16px rgba(255, 50, 66, 0.28),
+    inset 0 0 18px rgba(255, 46, 59, 0.08);
+}
+
+.hud-neon-ember {
+  border: 1px solid rgba(255, 88, 36, 0.85);
+  box-shadow:
+    inset 0 1px 0 rgba(255, 184, 0, 0.2),
+    0 0 0 1px rgba(255, 77, 26, 0.22),
+    0 0 18px rgba(255, 77, 26, 0.26),
+    inset 0 0 18px rgba(255, 77, 26, 0.08);
 }
 
 .hud-neon-gold {
-  border: 1px solid rgba(255, 184, 0, 0.9);
+  border: 1px solid rgba(255, 196, 26, 0.92);
   box-shadow:
-    0 0 0 1px rgba(255, 184, 0, 0.22),
-    0 0 16px rgba(255, 184, 0, 0.3),
-    0 0 38px rgba(255, 184, 0, 0.14),
-    inset 0 0 16px rgba(255, 184, 0, 0.1);
+    inset 0 1px 0 rgba(255, 232, 130, 0.28),
+    0 0 0 1px rgba(255, 184, 0, 0.24),
+    0 0 16px rgba(255, 184, 0, 0.34),
+    inset 0 0 16px rgba(255, 184, 0, 0.12);
 }
 
 .hud-team-blue {
-  border: 1px solid rgba(49, 133, 255, 0.55);
+  border: 1px solid rgba(49, 133, 255, 0.68);
   box-shadow:
-    inset 3px 0 0 #3185FF,
-    -6px 0 22px rgba(49, 133, 255, 0.28),
-    0 0 24px rgba(49, 133, 255, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.45);
+    inset 4px 0 0 #2B82FF,
+    inset 0 1px 0 rgba(120, 180, 255, 0.18),
+    -4px 0 18px rgba(49, 133, 255, 0.3),
+    0 10px 24px rgba(0, 0, 0, 0.55);
 }
 
 .hud-team-red {
-  border: 1px solid rgba(255, 52, 63, 0.55);
+  border: 1px solid rgba(255, 52, 63, 0.68);
   box-shadow:
-    inset -3px 0 0 #FF343F,
-    6px 0 22px rgba(255, 52, 63, 0.28),
-    0 0 24px rgba(255, 52, 63, 0.1),
-    0 8px 24px rgba(0, 0, 0, 0.45);
+    inset -4px 0 0 #FF343F,
+    inset 0 1px 0 rgba(255, 130, 130, 0.18),
+    4px 0 18px rgba(255, 52, 63, 0.3),
+    0 10px 24px rgba(0, 0, 0, 0.55);
+}
+
+/* Chamfered Esports Frame utilities */
+.fc-chamfer-sm {
+  clip-path: polygon(8px 0, 100% 0, 100% calc(100% - 8px), calc(100% - 8px) 100%, 0 100%, 0 8px);
+}
+
+.fc-chamfer-md {
+  clip-path: polygon(14px 0, 100% 0, 100% calc(100% - 14px), calc(100% - 14px) 100%, 0 100%, 0 14px);
+}
+
+.fc-chamfer-tr {
+  clip-path: polygon(0 0, calc(100% - 16px) 0, 100% 16px, 100% 100%, 0 100%);
+}
+
+.fc-chamfer-tl {
+  clip-path: polygon(16px 0, 100% 0, 100% 100%, 0 100%, 0 16px);
+}
+
+/* Carbon + subtle tactical hairline texture */
+.fc-carbon-surface {
+  background:
+    linear-gradient(180deg, rgba(22, 16, 20, 0.94) 0%, rgba(10, 8, 12, 0.97) 100%);
+}
+
+.fc-tactical-hatch {
+  background-image: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.025) 0px,
+    rgba(255, 255, 255, 0.025) 1px,
+    transparent 1px,
+    transparent 8px
+  );
 }
 
 @keyframes hudGoldPulse {
   0%, 100% {
     box-shadow:
-      0 0 0 1px rgba(255, 184, 0, 0.22),
-      0 0 14px rgba(255, 184, 0, 0.26),
-      0 0 32px rgba(255, 184, 0, 0.12),
-      inset 0 0 14px rgba(255, 184, 0, 0.08);
+      0 0 0 1px rgba(255, 184, 0, 0.25),
+      0 0 12px rgba(255, 184, 0, 0.28),
+      inset 0 0 12px rgba(255, 184, 0, 0.08);
   }
   50% {
     box-shadow:
-      0 0 0 1px rgba(255, 184, 0, 0.42),
-      0 0 22px rgba(255, 184, 0, 0.42),
-      0 0 44px rgba(255, 184, 0, 0.2),
-      inset 0 0 20px rgba(255, 184, 0, 0.14);
+      0 0 0 1px rgba(255, 198, 40, 0.55),
+      0 0 22px rgba(255, 184, 0, 0.45),
+      inset 0 0 18px rgba(255, 184, 0, 0.16);
   }
 }
 
 .hud-subtle-pulse {
-  animation: hudGoldPulse 3.2s ease-in-out infinite;
+  animation: hudGoldPulse 2.4s ease-in-out infinite;
 }
 
 /* ===== Neon glow (control pages) ===== */

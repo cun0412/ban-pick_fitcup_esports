@@ -212,38 +212,49 @@ export default function ValorantOverlay() {
   return (
     <OverlayWrapper bgOverride={state.overlayBg}>
       <div className="w-full h-full flex flex-col justify-between px-12 py-8 relative text-white overflow-hidden">
-        {/* Chỉ hiển thị lưới tactical & ánh sáng nền khi dùng nền tối (giữ nguyên transparency khi ?bg=transparent/chroma) */}
+        {/* Nền Broadcast chuẩn nhận diện FIT CUP S3 (chỉ bật khi ?bg=dark) */}
         {showAmbientDarkBg && (
-          <>
+          <div className="pointer-events-none absolute inset-0 bg-[#08060A]">
+            <img
+              src="/fitcup-s3-banner.jpg"
+              alt=""
+              className="w-full h-full object-cover opacity-[0.14] contrast-110"
+            />
             <div
-              className="pointer-events-none absolute inset-0 opacity-20"
+              className="absolute inset-0"
               style={{
-                backgroundImage:
-                  'linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px)',
-                backgroundSize: '64px 64px',
+                background:
+                  'radial-gradient(circle at 50% 42%, rgba(10,8,14,0.68) 0%, rgba(7,5,9,0.96) 85%)',
               }}
             />
-            <div className="pointer-events-none absolute -top-28 -left-28 w-[480px] h-[480px] rounded-full bg-[#3185FF]/15 blur-[135px]" />
-            <div className="pointer-events-none absolute -top-28 -right-28 w-[480px] h-[480px] rounded-full bg-[#FF343F]/15 blur-[135px]" />
-            <div className="pointer-events-none absolute bottom-0 left-1/2 -translate-x-1/2 w-[820px] h-[220px] rounded-full bg-[#FF4057]/10 blur-[120px]" />
-          </>
+            <div
+              className="absolute inset-x-0 bottom-0 h-52"
+              style={{
+                background:
+                  'linear-gradient(0deg, rgba(255,77,26,0.14) 0%, transparent 100%)',
+              }}
+            />
+            <div className="absolute inset-0 fc-tactical-hatch opacity-70" />
+            <div className="absolute top-0 inset-x-0 h-[2px] bg-gradient-to-r from-[#2B82FF] via-[#FF4D1A] to-[#FF343F]" />
+            <div className="absolute bottom-0 inset-x-0 h-[2px] bg-gradient-to-r from-[#2B82FF]/60 via-[#FFB800]/75 to-[#FF343F]/60" />
+          </div>
         )}
 
-        {/* Header: Team A (xanh #3185FF) — Giải đấu — Team B (đỏ #FF343F) */}
+        {/* Header: Team A (xanh #2B82FF) — FIT CUP S3 — Team B (đỏ #FF343F) */}
         <header className="relative z-10 flex items-center justify-between gap-6">
-          {/* Team A: 6-8px radius + viền xanh & ánh sáng cạnh trái */}
-          <div className="flex items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-blue flex-1 max-w-[520px] min-w-0 relative">
-            <div className="w-16 h-16 rounded-[6px] bg-black/60 border border-[#3185FF]/45 flex items-center justify-center overflow-hidden shrink-0">
+          {/* Team A */}
+          <div className="flex items-center gap-4 px-5 py-3 fc-chamfer-sm fc-carbon-surface hud-team-blue flex-1 max-w-[520px] min-w-0 relative">
+            <div className="w-16 h-16 fc-chamfer-sm bg-black/70 border border-[#2B82FF]/55 flex items-center justify-center overflow-hidden shrink-0">
               {state.teamA.logo ? (
                 <img src={state.teamA.logo} alt="" className="w-full h-full object-contain p-1.5" />
               ) : (
-                <span className="font-display font-black text-2xl text-[#3185FF]">
+                <span className="font-display font-black text-2xl text-[#2B82FF]">
                   {state.teamA.name.slice(0, 2).toUpperCase()}
                 </span>
               )}
             </div>
             <div className="min-w-0">
-              <div className="text-[11px] font-display font-bold uppercase tracking-[0.28em] text-[#3185FF]">
+              <div className="text-[11px] font-display font-bold uppercase tracking-[0.28em] text-[#2B82FF]">
                 TEAM A
               </div>
               <div className="font-display font-black text-3xl tracking-wider truncate">
@@ -252,24 +263,24 @@ export default function ValorantOverlay() {
             </div>
           </div>
 
-          {/* Giữa: Thông tin giải đấu */}
-          <div className="text-center px-10 py-3 rounded-[10px] bg-[#0b1018]/94 hud-neon-red relative shrink-0 max-w-[600px]">
-            <HudCorners color="#FF4057" size={10} offset={5} />
+          {/* Giữa: Thông tin giải đấu FIT CUP S3 */}
+          <div className="text-center px-10 py-3 fc-chamfer-sm fc-carbon-surface hud-neon-ember relative shrink-0 max-w-[600px]">
+            <HudCorners color="#FFB800" size={10} offset={5} />
             <div className="font-display font-black text-3xl tracking-widest text-white uppercase">
               {state.tournamentName}
             </div>
             <div className="flex items-center justify-center gap-3 mt-1">
-              <span className="h-[1px] w-7 bg-[#FF4057]" />
-              <span className="font-display font-bold text-base tracking-[0.22em] text-[#FF4057] uppercase">
+              <span className="h-[1px] w-7 bg-[#FF4D1A]" />
+              <span className="font-display font-bold text-base tracking-[0.22em] text-[#FFB800] uppercase">
                 {state.roundName} • {state.mode === 'spin' ? state.spinConfig.boType.toUpperCase() : state.boType.toUpperCase()}
               </span>
-              <span className="h-[1px] w-7 bg-[#FF4057]" />
+              <span className="h-[1px] w-7 bg-[#FF4D1A]" />
             </div>
           </div>
 
-          {/* Team B: 6-8px radius + viền đỏ & ánh sáng cạnh phải */}
-          <div className="flex flex-row-reverse items-center gap-4 px-5 py-3 rounded-[7px] bg-[#0b1018]/92 hud-team-red flex-1 max-w-[520px] min-w-0 text-right relative">
-            <div className="w-16 h-16 rounded-[6px] bg-black/60 border border-[#FF343F]/45 flex items-center justify-center overflow-hidden shrink-0">
+          {/* Team B */}
+          <div className="flex flex-row-reverse items-center gap-4 px-5 py-3 fc-chamfer-sm fc-carbon-surface hud-team-red flex-1 max-w-[520px] min-w-0 text-right relative">
+            <div className="w-16 h-16 fc-chamfer-sm bg-black/70 border border-[#FF343F]/55 flex items-center justify-center overflow-hidden shrink-0">
               {state.teamB.logo ? (
                 <img src={state.teamB.logo} alt="" className="w-full h-full object-contain p-1.5" />
               ) : (
@@ -510,21 +521,9 @@ export default function ValorantOverlay() {
                             }`}
                           >
                             <HudCorners
-                              color={celebrating ? '#FFB800' : '#FF4057'}
+                              color={celebrating ? '#FFB800' : '#FF4D1A'}
                               size={16}
                               offset={10}
-                            />
-
-                            {/* Ánh sáng nhẹ ở các góc khung chính */}
-                            <div
-                              className="pointer-events-none absolute -top-10 -left-10 w-44 h-44 rounded-full blur-2xl opacity-30"
-                              style={{
-                                backgroundColor: celebrating ? '#FFB800' : '#FF4057',
-                              }}
-                            />
-                            <div
-                              className="pointer-events-none absolute -bottom-10 -right-10 w-44 h-44 rounded-full blur-2xl opacity-25"
-                              style={{ backgroundColor: '#FF4057' }}
                             />
 
                             <img
@@ -553,13 +552,13 @@ export default function ValorantOverlay() {
                             <div className="absolute inset-0 bg-gradient-to-t from-black/95 via-black/25 to-black/35" />
                             <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-transparent to-transparent" />
 
-                            {/* Badge góc trên trái (3-4px radius) */}
+                            {/* Badge góc trên trái */}
                             <div className="absolute top-6 left-6 flex items-center gap-2.5 z-10">
-                              <span className="px-4 py-1.5 rounded-[4px] bg-[#FF4057] text-white font-display font-black text-xl tracking-wider shadow">
+                              <span className="px-4 py-1.5 fc-chamfer-sm bg-[#FF343F] text-white font-display font-black text-xl tracking-wider shadow">
                                 MAP {featuredSpinResult.mapNumber}
                               </span>
-                              <span className="px-3.5 py-1.5 rounded-[4px] bg-black/75 border border-[#FFB800]/55 text-[#FFB800] font-display font-bold text-sm tracking-widest uppercase">
-                                {celebrating ? '★ VỪA QUAY TRÚNG' : 'BẢN ĐỒ THI ĐẤU'}
+                              <span className="px-3.5 py-1.5 fc-chamfer-sm bg-black/85 border border-[#FFB800]/65 text-[#FFB800] font-display font-bold text-sm tracking-widest uppercase">
+                                {celebrating ? 'VỪA QUAY TRÚNG' : 'BẢN ĐỒ THI ĐẤU'}
                               </span>
                             </div>
 
@@ -615,15 +614,15 @@ export default function ValorantOverlay() {
                                       : state.teamB.name}
                                   </span>
                                   <span
-                                    className={`px-3.5 py-1 rounded-[4px] font-display font-black text-base uppercase ${
+                                    className={`px-3.5 py-1 fc-chamfer-sm font-display font-black text-base uppercase ${
                                       featuredSpinResult.side.side === 'attack'
-                                        ? 'bg-[#FF4057] text-white'
+                                        ? 'bg-[#FF343F] text-white'
                                         : 'bg-cyan-400 text-black'
                                     }`}
                                   >
                                     {featuredSpinResult.side.side === 'attack'
-                                      ? '⚔️ ATTACK'
-                                      : '🛡️ DEFENSE'}
+                                      ? 'ATTACK'
+                                      : 'DEFENSE'}
                                   </span>
                                 </div>
                               )}
@@ -841,7 +840,7 @@ export default function ValorantOverlay() {
 
         {/* Footer */}
         <footer className="relative z-10 flex items-center justify-between text-xs text-gray-400 font-display tracking-widest uppercase border-t border-white/10 pt-3">
-          <span>ESPORTS BAN/PICK SYSTEM</span>
+          <span>FIT CUP SEASON 3 • BAN/PICK SYSTEM</span>
           <span>VALORANT TOURNAMENT • LIVE BROADCAST</span>
         </footer>
       </div>
