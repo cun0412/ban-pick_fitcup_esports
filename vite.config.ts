@@ -52,6 +52,7 @@ function localApiPlugin(): Plugin {
           else if (route === 'live') out = await mod.handleLive(apiReq);
           else if (route === 'matches') out = await mod.handleMatches(apiReq);
           else if (route === 'heroes') out = await mod.handleHeroes(apiReq);
+          else if (route === 'football-reports') out = await mod.handleFootballReports(apiReq);
 
           res.statusCode = out.status;
           res.setHeader('Content-Type', 'application/json; charset=utf-8');

@@ -169,3 +169,53 @@ export async function saveHeroOverrides(
     return false;
   }
 }
+
+export async function fetchFootballReports<T = any>(): Promise<{
+  data: T[];
+  storage: 'postgres' | 'memory';
+}> {
+  try {
+    const res = await fetch('/api/football-reports', { cache: 'no-store' });
+    if (res.ok) {
+      const json = await res.json();
+      return {
+        data: (json.reports || []) as T[],
+        storage: json.storage === 'postgres' ? 'postgres' : 'memory',
+      };
+    }
+  } catch {}
+  return { data: [], storage: 'memory' };
+}
+
+export async function saveFootballReport<T extends { id?: string }>(
+  report: T
+): Promise<{ ok: boolean; report?: T; storage: 'postgres' | 'memory' }> {
+  try {
+    const res = await fetch('/api/football-reports', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ id: report.id, report }),
+    });
+    if (res.ok) {
+      const json = await res.json();
+      return {
+        ok: true,
+        report: json.report as T,
+        storage: json.storage === 'postgres' ? 'postgres' : 'memory',
+      };
+    }
+  } catch {}
+  return { ok: false, storage: 'memory' };
+}
+
+export async function deleteFootballReport(id: string): Promise<boolean> {
+  try {
+    const res = await fetch(
+      `/api/football-reports?id=${encodeURIComponent(id)}`,
+      { method: 'DELETE' }
+    );
+    return res.ok;
+  } catch {
+    return false;
+  }
+}

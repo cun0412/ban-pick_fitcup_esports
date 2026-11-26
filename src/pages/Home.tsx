@@ -57,12 +57,20 @@ export default function Home() {
           </div>
         </div>
 
-        <Link
-          to="/matches"
-          className="h-9 px-3.5 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-[rgba(238,240,245,0.1)] text-xs text-[#a3a9b8] hover:text-[#eef0f5] inline-flex items-center transition-colors duration-150 shrink-0"
-        >
-          Lịch sử trận đấu
-        </Link>
+        <div className="flex items-center gap-2 shrink-0">
+          <Link
+            to="/football"
+            className="h-9 px-3.5 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-emerald-500/30 text-xs text-emerald-300 hover:text-emerald-200 inline-flex items-center transition-colors duration-150 shrink-0"
+          >
+            ⚽ Biên bản Bóng đá
+          </Link>
+          <Link
+            to="/matches"
+            className="h-9 px-3.5 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-[rgba(238,240,245,0.1)] text-xs text-[#a3a9b8] hover:text-[#eef0f5] inline-flex items-center transition-colors duration-150 shrink-0"
+          >
+            Lịch sử trận đấu
+          </Link>
+        </div>
       </header>
 
       {/* Nội dung chính */}

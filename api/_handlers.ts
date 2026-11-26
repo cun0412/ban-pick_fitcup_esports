@@ -256,3 +256,91 @@ export async function handleHeroes(req: ApiRequest): Promise<ApiResponse> {
 
   return { status: 405, data: { error: 'Method not allowed' } };
 }
+
+const FOOTBALL_KEY_PREFIX = 'football_report:';
+
+export async function handleFootballReports(req: ApiRequest): Promise<ApiResponse> {
+  const db = getServerSupabase();
+
+  if (req.method === 'GET') {
+    if (db) {
+      const { data, error } = await db
+        .from('app_configs')
+        .select('key, value, updated_at')
+        .like('key', `${FOOTBALL_KEY_PREFIX}%`)
+        .order('updated_at', { ascending: false })
+        .limit(200);
+      if (error) return { status: 500, data: { error: error.message } };
+      const reports = (data || []).map((row: any) => ({
+        ...(row.value || {}),
+        id: row.value?.id || String(row.key).replace(FOOTBALL_KEY_PREFIX, ''),
+        updated_at: row.updated_at,
+      }));
+      return { status: 200, data: { reports, storage: 'postgres' } };
+    }
+
+    const reports: any[] = [];
+    memoryStore.configs.forEach((val, key) => {
+      if (key.startsWith(FOOTBALL_KEY_PREFIX)) {
+        reports.push({
+          ...(val || {}),
+          id: val?.id || key.replace(FOOTBALL_KEY_PREFIX, ''),
+        });
+      }
+    });
+    reports.sort((a, b) =>
+      String(b.updated_at || b.created_at || '').localeCompare(
+        String(a.updated_at || a.created_at || '')
+      )
+    );
+    return { status: 200, data: { reports, storage: 'memory' } };
+  }
+
+  if (req.method === 'POST') {
+    const report = req.body?.report;
+    if (!report || typeof report !== 'object') {
+      return { status: 400, data: { error: 'Dữ liệu biên bản bóng đá không hợp lệ' } };
+    }
+    const id = req.body?.id || report.id || crypto.randomUUID();
+    const now = new Date().toISOString();
+    const savedRecord = {
+      ...report,
+      id,
+      created_at: report.created_at || now,
+      updated_at: now,
+    };
+
+    if (db) {
+      const { error } = await db.from('app_configs').upsert(
+        {
+          key: `${FOOTBALL_KEY_PREFIX}${id}`,
+          value: savedRecord,
+          updated_at: now,
+        },
+        { onConflict: 'key' }
+      );
+      if (error) return { status: 500, data: { error: error.message } };
+      return { status: 201, data: { report: savedRecord, storage: 'postgres' } };
+    }
+
+    memoryStore.configs.set(`${FOOTBALL_KEY_PREFIX}${id}`, savedRecord);
+    return { status: 201, data: { report: savedRecord, storage: 'memory' } };
+  }
+
+  if (req.method === 'DELETE') {
+    const id = req.query.id;
+    if (!id) return { status: 400, data: { error: 'Thiếu id' } };
+    if (db) {
+      const { error } = await db
+        .from('app_configs')
+        .delete()
+        .eq('key', `${FOOTBALL_KEY_PREFIX}${id}`);
+      if (error) return { status: 500, data: { error: error.message } };
+      return { status: 200, data: { ok: true } };
+    }
+    memoryStore.configs.delete(`${FOOTBALL_KEY_PREFIX}${id}`);
+    return { status: 200, data: { ok: true } };
+  }
+
+  return { status: 405, data: { error: 'Method not allowed' } };
+}

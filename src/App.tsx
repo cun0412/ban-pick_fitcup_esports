@@ -8,6 +8,7 @@ const LQAdmin = lazy(() => import('./pages/lq/LQAdmin'));
 const ValorantControl = lazy(() => import('./pages/valorant/ValorantControl'));
 const ValorantOverlay = lazy(() => import('./pages/valorant/ValorantOverlay'));
 const Matches = lazy(() => import('./pages/Matches'));
+const FootballReportPage = lazy(() => import('./pages/football/FootballReportPage'));
 
 const Loading = () => (
   <div className="min-h-screen bg-gray-950 flex flex-col items-center justify-center gap-3 text-gray-300">
@@ -28,6 +29,7 @@ export default function App() {
           <Route path="/valorant/control" element={<ValorantControl />} />
           <Route path="/valorant/overlay" element={<ValorantOverlay />} />
           <Route path="/matches" element={<Matches />} />
+          <Route path="/football" element={<FootballReportPage />} />
         </Routes>
       </Suspense>
     </BrowserRouter>
