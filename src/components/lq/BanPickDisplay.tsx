@@ -341,14 +341,22 @@ export default function BanPickDisplay({
         </div>
       )}
 
-      {/* Bố cục chính: Cột A - Trung tâm - Cột B */}
-      <div className={`flex items-stretch gap-5 ${isOverlay ? 'px-10 pb-8' : ''}`}>
+      {/* Bố cục chính: Cột A - Trung tâm - Cột B (trên mobile xếp dọc gọn khi preview) */}
+      <div
+        className={`flex items-stretch ${
+          isOverlay
+            ? 'flex-row gap-5 px-10 pb-8'
+            : 'flex-col md:flex-row gap-4 md:gap-5'
+        }`}
+      >
         {renderTeamColumn('A', teamA, bansA, picksA)}
 
         {/* Cột trung tâm: Đồng hồ & Lượt hiện tại */}
         <div
-          className={`flex flex-col items-center justify-center shrink-0 ${
-            isOverlay ? 'w-72 gap-6' : 'w-40 gap-3'
+          className={`flex items-center justify-center shrink-0 ${
+            isOverlay
+              ? 'flex-col w-72 gap-6'
+              : 'flex-row md:flex-col w-full md:w-40 gap-3'
           }`}
         >
           {timerEnabled && (() => {

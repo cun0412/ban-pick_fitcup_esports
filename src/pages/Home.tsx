@@ -32,21 +32,21 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-[#0b0d14] text-[#eef0f5] flex flex-col justify-between font-body">
       {/* Thanh đầu trang: Cụm nhận diện Khoa CNTT - ĐH Kinh tế Quốc dân */}
-      <header className="w-full max-w-6xl mx-auto px-6 md:px-10 pt-6 pb-4 flex items-center justify-between gap-4 border-b border-[rgba(238,240,245,0.08)]">
-        <div className="flex items-center gap-3">
-          <div className="w-12 h-12 rounded-full overflow-hidden shrink-0">
+      <header className="w-full max-w-6xl mx-auto px-4 sm:px-6 md:px-10 pt-5 pb-4 flex flex-wrap items-center justify-between gap-3 border-b border-[rgba(238,240,245,0.08)]">
+        <div className="flex items-center gap-3 min-w-0">
+          <div className="w-11 h-11 sm:w-12 sm:h-12 rounded-full overflow-hidden shrink-0">
             <img
               src="/logo-neu.png"
               alt="Đại học Kinh tế Quốc dân"
               className="w-full h-full object-cover rounded-full"
             />
           </div>
-          <div className="leading-tight">
+          <div className="leading-tight min-w-0">
             <div
-              className="text-base md:text-lg font-normal tracking-wide uppercase text-[#2d8cff]"
+              className="text-sm sm:text-base md:text-lg font-normal tracking-wide uppercase text-[#2d8cff]"
               style={{ fontFamily: "'Roboto Condensed', sans-serif" }}
             >
-              KHOA CÔNG NGHỆ THÔNG TIN
+              LIÊN CHI ĐOÀN KHOA CÔNG NGHỆ THÔNG TIN
             </div>
             <div
               className="text-xs font-normal text-[#a3a9b8] mt-0.5"
@@ -57,16 +57,16 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex items-center gap-2 shrink-0">
+        <div className="flex flex-wrap items-center gap-2 w-full sm:w-auto justify-start sm:justify-end">
           <Link
             to="/football"
-            className="h-9 px-3.5 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-emerald-500/30 text-xs text-emerald-300 hover:text-emerald-200 inline-flex items-center transition-colors duration-150 shrink-0"
+            className="h-9 px-3 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-emerald-500/30 text-xs text-emerald-300 hover:text-emerald-200 inline-flex items-center transition-colors duration-150 whitespace-nowrap"
           >
-            ⚽ Biên bản Bóng đá
+            Biên bản Bóng đá
           </Link>
           <Link
             to="/matches"
-            className="h-9 px-3.5 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-[rgba(238,240,245,0.1)] text-xs text-[#a3a9b8] hover:text-[#eef0f5] inline-flex items-center transition-colors duration-150 shrink-0"
+            className="h-9 px-3 rounded-lg bg-[#11141c] hover:bg-[#1a1e28] border border-[rgba(238,240,245,0.1)] text-xs text-[#a3a9b8] hover:text-[#eef0f5] inline-flex items-center transition-colors duration-150 whitespace-nowrap"
           >
             Lịch sử trận đấu
           </Link>
@@ -235,7 +235,7 @@ export default function Home() {
       {/* Footer */}
       <footer className="w-full max-w-6xl mx-auto px-6 md:px-10 py-5 border-t border-[rgba(238,240,245,0.08)] flex flex-col sm:flex-row items-center justify-between gap-2 text-xs text-[#7a8296]">
         <span>Author: Ngô Tiến Dũng - Trưởng Ban Tổ chức</span>
-        <span>Khoa Công nghệ Thông tin · Đại học Kinh tế Quốc dân</span>
+        <span>Liên Chi Đoàn Khoa Công nghệ Thông tin - Đại học Kinh tế Quốc dân</span>
       </footer>
     </div>
   );

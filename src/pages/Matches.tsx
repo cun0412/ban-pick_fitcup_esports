@@ -84,7 +84,7 @@ export default function Matches() {
           <div className="flex items-center gap-3">
             <Link
               to="/"
-              className="h-9 px-3 rounded-lg bg-[#1a1e28] hover:bg-[#232836] border border-[rgba(238,240,245,0.1)] text-xs inline-flex items-center"
+              className="h-9 px-3 rounded-lg bg-[#1a1e28] hover:bg-[#232836] border border-[rgba(238,240,245,0.1)] text-xs inline-flex items-center whitespace-nowrap shrink-0"
             >
               ← Trang chủ
             </Link>

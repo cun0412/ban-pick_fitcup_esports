@@ -236,7 +236,6 @@ export default function CaptainFaceCapture({
                 <input
                   type="file"
                   accept="image/*"
-                  capture="user"
                   onChange={handleFileUpload}
                   className="hidden"
                 />

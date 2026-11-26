@@ -1,4 +1,4 @@
-import { useEffect, useId, useMemo, useRef, useState } from 'react';
+import { memo, useEffect, useId, useMemo, useRef, useState } from 'react';
 import type { ValorantMap } from '../../types';
 
 const SLICE_COLORS = [
@@ -25,9 +25,9 @@ interface SpinWheelProps {
 
 /**
  * Kiểu 1: Vòng quay may mắn (Wheel) 60fps bằng SVG + requestAnimationFrame
- * Hiển thị ảnh nền từng map trực tiếp trong mỗi múi quay, dừng mượt đúng kim chỉ trên đỉnh
+ * Xoay trực tiếp qua DOM ref (không re-render React 60fps, không bị giật lúc dừng)
  */
-export default function SpinWheel({
+function SpinWheelInner({
   maps,
   targetMapId,
   isSpinning,
@@ -38,8 +38,8 @@ export default function SpinWheel({
   size = 460,
 }: SpinWheelProps) {
   const uid = useId().replace(/:/g, '');
-  const [rotation, setRotation] = useState(0);
   const [fallbackSplashIds, setFallbackSplashIds] = useState<Record<string, boolean>>({});
+  const rotatorRef = useRef<HTMLDivElement | null>(null);
   const rotRef = useRef(0);
   const mapsRef = useRef(maps);
   const onTickRef = useRef(onTick);
@@ -47,6 +47,13 @@ export default function SpinWheel({
   mapsRef.current = maps;
   onTickRef.current = onTick;
   onFinishRef.current = onFinish;
+
+  // Giữ transform khớp rotRef khi mount lần đầu
+  useEffect(() => {
+    if (rotatorRef.current) {
+      rotatorRef.current.style.transform = `rotate(${rotRef.current}deg) translateZ(0)`;
+    }
+  }, []);
 
   useEffect(() => {
     const currentMaps = mapsRef.current;
@@ -70,17 +77,22 @@ export default function SpinWheel({
     const startTime = performance.now();
     let lastSliceBoundary = Math.floor(startRot / sliceAngle);
     let rafId = 0;
-    let finishTimer = 0;
+
+    const applyRotation = (deg: number) => {
+      rotRef.current = deg;
+      if (rotatorRef.current) {
+        rotatorRef.current.style.transform = `rotate(${deg}deg) translateZ(0)`;
+      }
+    };
 
     const animate = (now: number) => {
       const elapsed = now - startTime;
       const t = Math.min(1, elapsed / durationMs);
-      // Easing giảm tốc tự nhiên (quartic ease-out)
+      // Easing giảm tốc tự nhiên (cubic-quartic blend mượt đến cuối)
       const eased = 1 - Math.pow(1 - t, 4);
       const currentRot = startRot + totalDelta * eased;
 
-      rotRef.current = currentRot;
-      setRotation(currentRot);
+      applyRotation(currentRot);
 
       const sliceStep = Math.floor(currentRot / sliceAngle);
       if (sliceStep !== lastSliceBoundary) {
@@ -91,21 +103,16 @@ export default function SpinWheel({
       if (t < 1) {
         rafId = requestAnimationFrame(animate);
       } else {
-        // Đợi frame cuối sơn xong hẳn rồi mới báo hoàn tất để không giật khi hiện banner
-        finishTimer = window.setTimeout(() => {
-          onFinishRef.current?.();
-        }, 90);
+        onFinishRef.current?.();
       }
     };
 
     rafId = requestAnimationFrame(animate);
     return () => {
       cancelAnimationFrame(rafId);
-      if (finishTimer) clearTimeout(finishTimer);
     };
   }, [isSpinning, targetMapId, triggerId, duration]);
 
-  // Memoize toàn bộ SVG bánh xe để lúc xoay 60fps hay lúc dừng re-render cha không vẽ lại <image>/<clipPath>
   const wheelSvg = useMemo(() => {
     const radius = size / 2;
     const outerRadius = radius - 8;
@@ -285,17 +292,16 @@ export default function SpinWheel({
         className="z-20 -mb-4 w-0 h-0 border-l-[16px] border-r-[16px] border-t-[28px] border-l-transparent border-r-transparent border-t-amber-400 drop-shadow-[0_0_12px_rgba(251,191,36,0.9)]"
       />
 
-      {/* Bánh xe: xoay trên wrapper div GPU layer ổn định để lúc dừng không bị giật/snap SVG */}
+      {/* Bánh xe: điều khiển góc xoay qua DOM ref trực tiếp để không giật khi re-render */}
       <div
         className="rounded-full p-2 bg-gradient-to-br from-[#ff4655] via-amber-400 to-[#ff4655] shadow-[0_0_50px_rgba(255,70,85,0.4)]"
         style={{ width: size + 16, height: size + 16 }}
       >
         <div
-          className="rounded-full overflow-hidden"
+          ref={rotatorRef}
           style={{
             width: size,
             height: size,
-            transform: `rotate(${rotation}deg) translateZ(0)`,
             willChange: 'transform',
             backfaceVisibility: 'hidden',
           }}
@@ -306,3 +312,6 @@ export default function SpinWheel({
     </div>
   );
 }
+
+const SpinWheel = memo(SpinWheelInner);
+export default SpinWheel;

@@ -286,7 +286,7 @@ export default function ValorantControl() {
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300"
+            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 whitespace-nowrap"
           >
             ← Trang chủ
           </Link>
@@ -741,8 +741,11 @@ export default function ValorantControl() {
                 )}
               </div>
 
-              {/* Khu vực Sân khấu Quay Map */}
-              <div className="glass rounded-2xl p-5 flex flex-col items-center gap-5 relative overflow-hidden">
+              {/* Khu vực Sân khấu Quay Map (overflowAnchor: none tránh giật cuộn trang khi hiện kết quả bên dưới) */}
+              <div
+                className="rounded-2xl bg-[#111926]/95 border border-white/10 p-5 flex flex-col items-center gap-5 relative"
+                style={{ overflowAnchor: 'none' }}
+              >
                 <div className="w-full flex flex-wrap items-center justify-between gap-2">
                   <div className="text-xs font-display font-bold uppercase tracking-widest text-gray-400">
                     Đang quay: {val.spinResults.length}/{targetSpinCount} Map ({val.spinConfig.boType.toUpperCase()}) • Pool hiện có {spinPoolMaps.length} map
@@ -856,40 +859,37 @@ export default function ValorantControl() {
                   )}
                 </div>
 
-                {/* Banner map trúng lớn (giữ cố định chiều cao để lúc dừng không đẩy giật bố cục vòng quay) */}
-                <div className="min-h-[84px] flex items-center justify-center w-full">
-                  <AnimatePresence mode="wait">
-                    {winnerBannerMap && !val.isSpinning ? (
-                      <motion.div
-                        key={winnerBannerMap.id}
-                        initial={{ opacity: 0, y: 4 }}
-                        animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0 }}
-                        transition={{ duration: 0.22 }}
-                        className="flex items-center gap-4 px-5 py-3 rounded-2xl bg-gradient-to-r from-[#ff4655]/30 via-amber-500/20 to-[#ff4655]/30 border border-amber-400 shadow-[0_0_30px_rgba(251,191,36,0.4)]"
-                      >
-                        <img
-                          src={winnerBannerMap.localSplash || winnerBannerMap.splash}
-                          alt={winnerBannerMap.name}
-                          className="w-24 h-14 object-cover rounded-lg border border-white/20"
-                        />
-                        <div>
-                          <div className="text-[11px] uppercase tracking-widest text-amber-300 font-bold">
-                            🎉 KẾT QUẢ VỪA QUAY
-                          </div>
-                          <div className="text-2xl font-display font-black uppercase text-white">
-                            {winnerBannerMap.name}
-                          </div>
+                {/* Banner map trúng lớn (khóa chiều cao cố định h-[92px] và không unmount AnimatePresence để vòng quay đứng im tuyệt đối) */}
+                <div className="h-[92px] flex items-center justify-center w-full overflow-hidden">
+                  {winnerBannerMap && !val.isSpinning ? (
+                    <motion.div
+                      key={winnerBannerMap.id}
+                      initial={{ opacity: 0 }}
+                      animate={{ opacity: 1 }}
+                      transition={{ duration: 0.16 }}
+                      className="flex items-center gap-4 px-5 py-2.5 rounded-2xl bg-gradient-to-r from-[#ff4655]/30 via-amber-500/20 to-[#ff4655]/30 border border-amber-400 shadow-[0_0_24px_rgba(251,191,36,0.35)]"
+                    >
+                      <img
+                        src={winnerBannerMap.localSplash || winnerBannerMap.splash}
+                        alt={winnerBannerMap.name}
+                        className="w-24 h-14 object-cover rounded-lg border border-white/20"
+                      />
+                      <div>
+                        <div className="text-[11px] uppercase tracking-widest text-amber-300 font-bold">
+                          🎉 KẾT QUẢ VỪA QUAY
                         </div>
-                      </motion.div>
-                    ) : (
-                      <div className="text-xs text-gray-500 font-medium">
-                        {val.isSpinning
-                          ? 'Đang quay chọn bản đồ...'
-                          : 'Bấm Quay Map hoặc phím Space để bắt đầu'}
+                        <div className="text-2xl font-display font-black uppercase text-white">
+                          {winnerBannerMap.name}
+                        </div>
                       </div>
-                    )}
-                  </AnimatePresence>
+                    </motion.div>
+                  ) : (
+                    <div className="text-xs text-gray-500 font-medium">
+                      {val.isSpinning
+                        ? 'Đang quay chọn bản đồ...'
+                        : 'Bấm Quay Map hoặc phím Space để bắt đầu'}
+                    </div>
+                  )}
                 </div>
               </div>
 

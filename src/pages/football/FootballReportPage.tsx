@@ -10,7 +10,7 @@ import {
   createEmptyFootballPlayer,
   createInitialFootballReport,
   downloadFootballReportDoc,
-  printFootballReportPdf,
+  downloadFootballReportPdf,
   type FootballPlayerRow,
   type FootballReportData,
 } from '../../utils/footballReport';
@@ -26,7 +26,17 @@ export default function FootballReportPage() {
   const [savedReports, setSavedReports] = useState<FootballReportData[]>([]);
   const [loadingSaved, setLoadingSaved] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [exportingPdfId, setExportingPdfId] = useState<string | null>(null);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
+
+  const handleExportPdf = async (report: FootballReportData, tag: string) => {
+    setExportingPdfId(tag);
+    try {
+      await downloadFootballReportPdf(report);
+    } finally {
+      setExportingPdfId(null);
+    }
+  };
 
   const loadSaved = async () => {
     setLoadingSaved(true);
@@ -139,18 +149,18 @@ export default function FootballReportPage() {
 
   return (
     <div className="min-h-screen bg-[#0b0d14] text-[#eef0f5] font-body flex flex-col">
-      {/* Header */}
-      <header className="border-b border-[rgba(238,240,245,0.08)] bg-[#0f131d]/95 backdrop-blur px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 sticky top-0 z-30">
-        <div className="flex items-center gap-3">
+      {/* Header (chỉ sticky trên màn hình lớn để mobile dễ lướt điền biểu mẫu) */}
+      <header className="border-b border-[rgba(238,240,245,0.08)] bg-[#0f131d]/95 backdrop-blur px-4 md:px-6 py-3 flex flex-wrap items-center justify-between gap-3 md:sticky md:top-0 z-30">
+        <div className="flex items-center gap-2.5 min-w-0">
           <Link
             to="/"
-            className="h-9 px-3 rounded-lg bg-[#1a1e28] hover:bg-[#232836] border border-[rgba(238,240,245,0.1)] text-xs inline-flex items-center"
+            className="h-9 px-3 rounded-lg bg-[#1a1e28] hover:bg-[#232836] border border-[rgba(238,240,245,0.1)] text-xs inline-flex items-center whitespace-nowrap shrink-0"
           >
             ← Trang chủ
           </Link>
-          <div>
-            <h1 className="font-display font-bold text-base md:text-lg tracking-wide text-emerald-300">
-              ⚽ BIÊN BẢN TRẬN ĐẤU BÓNG ĐÁ · FIT CUP S3
+          <div className="min-w-0">
+            <h1 className="font-display font-bold text-sm sm:text-base md:text-lg tracking-wide text-emerald-300 truncate">
+              ⚽ BIÊN BẢN BÓNG ĐÁ · FIT CUP S3
             </h1>
           </div>
         </div>
@@ -206,10 +216,11 @@ export default function FootballReportPage() {
           </button>
           <button
             type="button"
-            onClick={() => printFootballReportPdf(form)}
-            className="h-9 px-3.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold"
+            disabled={exportingPdfId === 'header'}
+            onClick={() => handleExportPdf(form, 'header')}
+            className="h-9 px-3.5 rounded-lg bg-blue-600 hover:bg-blue-500 text-xs font-bold disabled:opacity-50"
           >
-            🖨️ In / PDF
+            {exportingPdfId === 'header' ? 'Đang xuất PDF...' : '📄 Xuất PDF'}
           </button>
           <button
             type="button"
@@ -501,6 +512,10 @@ export default function FootballReportPage() {
                     Đội B: {form.teamBName}
                   </button>
                 </div>
+              </div>
+
+              <div className="md:hidden text-[11px] text-amber-300/80">
+                👉 Vuốt ngang bảng để nhập TĐ, DB, Thẻ phạt &amp; Bàn thắng 1–6
               </div>
 
               <div className="overflow-x-auto">
@@ -795,7 +810,7 @@ export default function FootballReportPage() {
                         <div className="text-[11px] text-gray-400">
                           Đội {side} ({side === 'A' ? form.teamAName : form.teamBName}):
                         </div>
-                        <div className="grid grid-cols-5 gap-1.5">
+                        <div className="grid grid-cols-2 sm:grid-cols-5 gap-1.5">
                           {pens.map((pk, idx) => (
                             <div
                               key={idx}
@@ -902,7 +917,7 @@ export default function FootballReportPage() {
                     key={rep.id}
                     className="rounded-xl bg-[#11141c] border border-white/10 p-4 space-y-3"
                   >
-                    <div className="flex items-start justify-between gap-2">
+                    <div className="flex flex-col sm:flex-row sm:items-start justify-between gap-2.5">
                       <div>
                         <div className="text-xs text-emerald-300 font-semibold">
                           {rep.matchCode ? `Mã trận: ${rep.matchCode}` : 'Trận bóng đá'}
@@ -921,7 +936,7 @@ export default function FootballReportPage() {
                         </div>
                       </div>
 
-                      <div className="flex items-center gap-2 shrink-0">
+                      <div className="flex flex-wrap items-center gap-2 shrink-0">
                         <button
                           type="button"
                           onClick={() => {
@@ -931,6 +946,14 @@ export default function FootballReportPage() {
                           className="px-2.5 py-1 rounded bg-blue-600 hover:bg-blue-500 text-xs font-semibold"
                         >
                           Mở / Sửa
+                        </button>
+                        <button
+                          type="button"
+                          disabled={exportingPdfId === (rep.id || 'item')}
+                          onClick={() => handleExportPdf(rep, rep.id || 'item')}
+                          className="px-2.5 py-1 rounded bg-indigo-600 hover:bg-indigo-500 text-xs font-semibold disabled:opacity-50"
+                        >
+                          {exportingPdfId === (rep.id || 'item') ? 'Đang xuất...' : 'Xuất PDF'}
                         </button>
                         <button
                           type="button"
@@ -950,7 +973,7 @@ export default function FootballReportPage() {
                     </div>
 
                     {/* Hiển thị ảnh Face ID 2 đội trưởng đã lưu */}
-                    <div className="grid grid-cols-2 gap-2 pt-2 border-t border-white/10">
+                    <div className="grid grid-cols-1 sm:grid-cols-2 gap-2 pt-2 border-t border-white/10">
                       {[
                         {
                           label: 'Đội trưởng A',

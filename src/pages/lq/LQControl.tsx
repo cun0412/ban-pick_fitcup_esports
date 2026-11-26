@@ -236,7 +236,7 @@ export default function LQControl() {
         <div className="flex items-center gap-3">
           <Link
             to="/"
-            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300"
+            className="px-3 py-1.5 rounded-lg bg-white/5 hover:bg-white/10 text-xs font-semibold text-gray-300 whitespace-nowrap"
           >
             ← Trang chủ
           </Link>
