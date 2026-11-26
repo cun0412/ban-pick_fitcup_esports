@@ -3,6 +3,8 @@ import { Link } from 'react-router-dom';
 import HeroGrid from '../../components/lq/HeroGrid';
 import BanPickDisplay from '../../components/lq/BanPickDisplay';
 import TeamSetup from '../../components/common/TeamSetup';
+import MatchReportModal from '../../components/common/MatchReportModal';
+import { buildLQReportInitial, type MatchReportData } from '../../utils/matchReport';
 import { useLQStore } from '../../stores/lqStore';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useBroadcast } from '../../hooks/useBroadcast';
@@ -23,6 +25,7 @@ export default function LQControl() {
   const { playBan, playPick, playWarning } = useAudio();
 
   const [showSettings, setShowSettings] = useState(false);
+  const [reportData, setReportData] = useState<MatchReportData | null>(null);
   const [copied, setCopied] = useState(false);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
   const [expiredAlert, setExpiredAlert] = useState(false);
@@ -155,10 +158,15 @@ export default function LQControl() {
   useKeyboard(
     useMemo(
       () => ({
-        'ctrl+z': handleUndo,
-        escape: () => lq.selectHero(null),
+        'ctrl+z': () => {
+          if (!reportData) handleUndo();
+        },
+        escape: () => {
+          if (reportData) setReportData(null);
+          else lq.selectHero(null);
+        },
       }),
-      [handleUndo, lq]
+      [handleUndo, lq, reportData]
     )
   );
 
@@ -306,6 +314,28 @@ export default function LQControl() {
             className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold"
           >
             {saveNotice || '💾 Lưu trận'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setReportData(
+                buildLQReportInitial({
+                  bansA: lq.bansA,
+                  bansB: lq.bansB,
+                  picksA: lq.picksA,
+                  picksB: lq.picksB,
+                  phases: lq.phases,
+                  heroes: lq.heroes,
+                  teamA: settings.teamA,
+                  teamB: settings.teamB,
+                  roundName: settings.roundName,
+                })
+              )
+            }
+            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold"
+          >
+            📄 Xuất biên bản
           </button>
 
           <Link
@@ -667,6 +697,12 @@ export default function LQControl() {
           </div>
         </div>
       )}
+
+      <MatchReportModal
+        open={Boolean(reportData)}
+        initialData={reportData}
+        onClose={() => setReportData(null)}
+      />
     </div>
   );
 }

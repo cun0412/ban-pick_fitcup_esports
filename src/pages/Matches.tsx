@@ -7,6 +7,8 @@ import {
 } from '../lib/api';
 import lqHeroesRaw from '../data/lq-heroes.json';
 import valorantMapsRaw from '../data/valorant-maps.json';
+import MatchReportModal from '../components/common/MatchReportModal';
+import { buildReportFromSavedMatch, type MatchReportData } from '../utils/matchReport';
 import type { LQHero, ValorantMap } from '../types';
 
 /**
@@ -17,6 +19,7 @@ export default function Matches() {
   const [loading, setLoading] = useState(true);
   const [filterGame, setFilterGame] = useState<'all' | 'lq' | 'valorant'>('all');
   const [search, setSearch] = useState('');
+  const [reportData, setReportData] = useState<MatchReportData | null>(null);
 
   const heroMap = useMemo(() => {
     const m = new Map<string, string>();
@@ -182,13 +185,30 @@ export default function Matches() {
                       </span>
                     </div>
 
-                    <button
-                      type="button"
-                      onClick={() => handleDelete(match.id)}
-                      className="text-xs text-[#7a8296] hover:text-red-400 transition-colors"
-                    >
-                      Xóa
-                    </button>
+                    <div className="flex items-center gap-3">
+                      <button
+                        type="button"
+                        onClick={() =>
+                          setReportData(
+                            buildReportFromSavedMatch(
+                              match,
+                              lqHeroesRaw as LQHero[],
+                              valorantMapsRaw as ValorantMap[]
+                            )
+                          )
+                        }
+                        className="px-2.5 py-1 rounded-md bg-indigo-600/80 hover:bg-indigo-500 text-xs font-medium text-white transition-colors"
+                      >
+                        📄 Xuất biên bản
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => handleDelete(match.id)}
+                        className="text-xs text-[#7a8296] hover:text-red-400 transition-colors"
+                      >
+                        Xóa
+                      </button>
+                    </div>
                   </div>
 
                   {/* Cặp đấu */}
@@ -294,6 +314,12 @@ export default function Matches() {
           </div>
         )}
       </div>
+
+      <MatchReportModal
+        open={Boolean(reportData)}
+        initialData={reportData}
+        onClose={() => setReportData(null)}
+      />
     </div>
   );
 }

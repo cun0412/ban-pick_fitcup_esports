@@ -8,6 +8,8 @@ import CardFlip from '../../components/valorant/CardFlip';
 import SpinResultDisplay from '../../components/valorant/SpinResultDisplay';
 import CoinFlip from '../../components/valorant/CoinFlip';
 import TeamSetup from '../../components/common/TeamSetup';
+import MatchReportModal from '../../components/common/MatchReportModal';
+import { buildValorantReportInitial, type MatchReportData } from '../../utils/matchReport';
 import { useValorantStore } from '../../stores/valorantStore';
 import { useSettingsStore } from '../../stores/settingsStore';
 import { useBroadcast } from '../../hooks/useBroadcast';
@@ -27,6 +29,7 @@ export default function ValorantControl() {
 
   const [copied, setCopied] = useState(false);
   const [saveNotice, setSaveNotice] = useState<string | null>(null);
+  const [reportData, setReportData] = useState<MatchReportData | null>(null);
   const [showMapPoolModal, setShowMapPoolModal] = useState(false);
   const [showVetoOrderModal, setShowVetoOrderModal] = useState(false);
   const [coinFlipMode, setCoinFlipMode] = useState<'team' | 'side' | null>(null);
@@ -185,22 +188,25 @@ export default function ValorantControl() {
     useMemo(
       () => ({
         'ctrl+z': () => {
+          if (reportData) return;
           if (val.mode === 'veto') val.vetoUndo();
           else val.undoSpin();
         },
         escape: () => {
+          setReportData(null);
           setShowMapPoolModal(false);
           setShowVetoOrderModal(false);
           setCoinFlipMode(null);
           setWinnerBannerMap(null);
         },
         space: () => {
+          if (reportData) return;
           if (val.mode === 'spin' && !val.isSpinning) {
             triggerSingleSpin(false);
           }
         },
       }),
-      [val, triggerSingleSpin]
+      [val, triggerSingleSpin, reportData]
     )
   );
 
@@ -351,6 +357,30 @@ export default function ValorantControl() {
             className="px-3 py-1.5 rounded-lg bg-emerald-600 hover:bg-emerald-500 text-xs font-bold"
           >
             {saveNotice || '💾 Lưu trận'}
+          </button>
+
+          <button
+            type="button"
+            onClick={() =>
+              setReportData(
+                buildValorantReportInitial({
+                  mode: val.mode,
+                  boType: val.boType,
+                  spinBoType: val.spinConfig.boType,
+                  maps: val.maps,
+                  vetoPhases: val.vetoPhases,
+                  vetoHistory: val.vetoHistory,
+                  spinResults: val.spinResults,
+                  preSpinBans: val.preSpinBans,
+                  teamA: settings.teamA,
+                  teamB: settings.teamB,
+                  roundName: settings.roundName,
+                })
+              )
+            }
+            className="px-3 py-1.5 rounded-lg bg-indigo-600 hover:bg-indigo-500 text-xs font-bold"
+          >
+            📄 Xuất biên bản
           </button>
 
           <Link
@@ -1063,6 +1093,12 @@ export default function ValorantControl() {
           />
         </div>
       )}
+
+      <MatchReportModal
+        open={Boolean(reportData)}
+        initialData={reportData}
+        onClose={() => setReportData(null)}
+      />
     </div>
   );
 }
